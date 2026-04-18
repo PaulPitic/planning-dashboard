@@ -24,14 +24,17 @@ const isMobile = () => window.innerWidth < 900;
 
 const Card = ({ children, color }) => (
   <div style={{
-    background: "#0f172a",
-    borderRadius: 12,
-    padding: isMobile() ? 14 : 10,
-    borderLeft: `6px solid ${color}`,
-    boxShadow: "0 4px 14px rgba(0,0,0,0.7)",
-    color: "#e5e7eb"
+    background: "#020617",
+    borderRadius: 14,
+    padding: isMobile() ? 16 : 12,
+    borderLeft: `8px solid ${color}`,
+    boxShadow: "0 6px 18px rgba(0,0,0,0.8)",
+    color: "#f1f5f9",
+    fontWeight: "500"
   }}>
     {children}
+  </div>
+); {children}
   </div>
 );
 
@@ -141,38 +144,38 @@ export default function Dashboard() {
       },
     };
 
-    setLocalData(updated);
-  };
-
-  if (!authenticated) {
+    setLocalif (!authenticated) {
     return (
       <div style={{
         height: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: "black",
+        background: "#020617",
         color: "white",
-        flexDirection: "column"
+        flexDirection: "column",
+        fontSize: 20
       }}>
-        <h2>🔐 Enter Password</h2>
+        <h2 style={{ fontSize: 28, marginBottom: 20 }}>🔐 Enter Password</h2>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={{ padding: 10, fontSize: 18 }}
+          style={{ padding: 12, fontSize: 20, borderRadius: 8 }}
         />
         <button
           onClick={() => {
             if (password === PASSWORD) setAuthenticated(true);
           }}
-          style={{ marginTop: 10, padding: 10 }}
+          style={{ marginTop: 15, padding: "12px 20px", fontSize: 18 }}
         >
           Login
         </button>
       </div>
     );
   }
+
+  const renderArea  }
 
   const renderArea = (area) => (
     <div key={area.name} style={{ marginBottom: isMobile() ? 20 : 10 }}>
@@ -222,8 +225,7 @@ export default function Dashboard() {
   return (
     <div style={{ background: "#020617", color: "white", minHeight: "100vh", padding: 15 }}>
 
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-        <h1 style={{ fontSize: isMobile() ? 28 : 22, fontWeight: "bold" }}>📺 Planning Dashboard</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", margin<h1 style={{ fontSize: isMobile() ? 32 : 26, fontWeight: "bold", letterSpacing: "1px" }}> fontWeight: "bold", letterSpacing: "1px"📺 Planning Dashboard</h1>
 
         <div style={{ display: "flex", gap: 10 }}>
           {teams.map(t => (
@@ -238,14 +240,8 @@ export default function Dashboard() {
               }}
             >
               {t}
-            </button>
-          ))}
-
-          <button onClick={() => setLocked(!locked)}>
-            {locked ? "🔒" : "🔓"}
-          </button>
-
-          <button onClick={applyChanges} style={{ background: "#22c55e", padding: "8px 12px" }}>
+      <button onClick={() => setLocked(!locked)} style={{ padding: "10px", fontSize: 16 }}>utton onClick={() => setLocked(!locked)}>
+            {locked ? "🔒<button onClick={applyChanges} style={{ background: "#22c55e", padding: "10px 14px", fontSize: 16, fontWeight: "bold" }}>round: "#22c55e", padding: "8px 12px" }}>
             ✅ Apply
           </button>
 

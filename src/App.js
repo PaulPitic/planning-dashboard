@@ -241,8 +241,42 @@ export default function Dashboard() {
         Logout
       </button>
 
-      <h2>👔 Leadership</h2>
-      {areas.map(renderArea)}
+      <h2 style={{ color: "#facc15" }}>👔 Leadership</h2>
+
+<div style={{
+  display: "grid",
+  gridTemplateColumns: isMobile() ? "repeat(2,1fr)" : "repeat(4,1fr)",
+  gap: 10
+}}>
+
+  {leadershipPositions.map(pos => (
+    <Card key={pos} color="#facc15">
+      <div>{pos}</div>
+
+      <select
+        disabled={locked}
+        value={teamData[pos] || ""}
+        onChange={e => assign(pos, e.target.value)}
+      >
+        <option value="">Select</option>
+
+        {pos.includes("Supervisor")
+          ? employees.supervisors[currentTeam].map(e => (
+              <option key={e}>{e}</option>
+            ))
+          : employees.coordinators[currentTeam].map(e => (
+              <option key={e}>{e}</option>
+            ))
+        }
+
+      </select>
+    </Card>
+  ))}
+
+</div>
+
+{/* OPERATIONS BELOW */}
+{areas.map(renderArea)}
 
       <h3>📦 Picking — {free.length}</h3>
       <div>{free.join(", ")}</div>

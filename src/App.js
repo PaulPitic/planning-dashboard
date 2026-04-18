@@ -11,15 +11,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+const PASSWORD = "1234"; // 🔐 CHANGE THIS
+
 const isMobile = () => window.innerWidth < 900;
 
 const Card = ({ children, color }) => (
   <div style={{
-    background: "#111",
+    background: "#0f172a",
     borderRadius: 12,
-    padding: isMobile() ? 12 : 8,
+    padding: isMobile() ? 14 : 10,
     borderLeft: `6px solid ${color}`,
-    boxShadow: "0 3px 10px rgba(0,0,0,0.6)"
+    boxShadow: "0 4px 14px rgba(0,0,0,0.7)",
+    color: "#e5e7eb"
   }}>
     {children}
   </div>
@@ -33,35 +36,15 @@ const leadershipPositions = [
 ];
 
 const areas = [
-  {
-    name: "RT / Hopt",
-    color: "#22c55e",
-    positions: ["RT Driver 1","RT Driver 2","Hopt"]
-  },
-  {
-    name: "Prep / Packsize",
-    color: "#3b82f6",
-    positions: ["Trolley Preper 1","Trolley Preper 2","Packsize"]
-  },
-  {
-    name: "Docs / Palletising",
-    color: "#f97316",
-    positions: [
-      "Document Applier 1","Document Applier 2",
-      "Palletiser 1","Palletiser 2","Palletiser 3","Palletiser 4",
-      "Trolley Dropper","Box Filler"
-    ]
-  },
-  {
-    name: "VAS / Nester",
-    color: "#a855f7",
-    positions: ["Vas 1","Nester 1","Nester 2"]
-  },
-  {
-    name: "Other",
-    color: "#14b8a6",
-    positions: ["Packing","C-Plein"]
-  }
+  { name: "RT / Hopt", color: "#22c55e", positions: ["RT Driver 1","RT Driver 2","Hopt"] },
+  { name: "Prep / Packsize", color: "#3b82f6", positions: ["Trolley Preper 1","Trolley Preper 2","Packsize"] },
+  { name: "Docs / Palletising", color: "#f97316", positions: [
+    "Document Applier 1","Document Applier 2",
+    "Palletiser 1","Palletiser 2","Palletiser 3","Palletiser 4",
+    "Trolley Dropper","Box Filler"
+  ]},
+  { name: "VAS / Nester", color: "#a855f7", positions: ["Vas 1","Nester 1","Nester 2"] },
+  { name: "Other", color: "#14b8a6", positions: ["Packing","C-Plein"] }
 ];
 
 const teams = ["Team A", "Team B"];
@@ -73,14 +56,8 @@ const commonCoordinators = [
 ];
 
 const employees = {
-  supervisors: {
-    "Team A": commonSupervisors,
-    "Team B": commonSupervisors,
-  },
-  coordinators: {
-    "Team A": commonCoordinators,
-    "Team B": commonCoordinators,
-  },
+  supervisors: { "Team A": commonSupervisors, "Team B": commonSupervisors },
+  coordinators: { "Team A": commonCoordinators, "Team B": commonCoordinators },
   "Team A": [
     "Arestov Oleksandr","Angheluta Dan","Biudiachenko Oleksander","Chrobak Jaroslaw",
     "Diachenko Maria","Fesenko Anna","Fouka Eleni","Hamerla Paula",
@@ -105,40 +82,77 @@ const employees = {
 };
 
 export default function Dashboard() {
+  const [refreshInterval, setRefreshInterval] = useState(0); // minutes
+  const [refreshTimer, setRefreshTimer] = useState(null);
   const [currentTeam, setCurrentTeam] = useState("Team A");
   const [locked, setLocked] = useState(true);
   const [data, setData] = useState({});
+  const [localData, setLocalData] = useState({});
+  const [authenticated, setAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "dashboard", "data"), (docSnap) => {
-      if (docSnap.exists()) setData(docSnap.data());
+      if (docSnap.exists()) {
+        setData(docSnap.data());
+        setLocalData(docSnap.data());
+      }
     });
     return () => unsub();
   }, []);
 
-  const updateData = async (newData) => {
-    await setDoc(doc(db, "dashboard", "data"), newData);
+  const applyChanges = async () => {
+    await setDoc(doc(db, "dashboard", "data"), localData);
   };
 
   const assign = (pos, val) => {
     if (locked) return;
-    if (Object.values(data[currentTeam] || {}).includes(val)) return;
+    if (Object.values(localData[currentTeam] || {}).includes(val)) return;
 
     const updated = {
-      ...data,
+      ...localData,
       [currentTeam]: {
-        ...(data[currentTeam] || {}),
+        ...(localData[currentTeam] || {}),
         [pos]: val,
       },
     };
 
-    setData(updated);
-    updateData(updated);
+    setLocalData(updated);
   };
+
+  if (!authenticated) {
+    return (
+      <div style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "black",
+        color: "white",
+        flexDirection: "column"
+      }}>
+        <h2>🔐 Enter Password</h2>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={{ padding: 10, fontSize: 18 }}
+        />
+        <button
+          onClick={() => {
+            if (password === PASSWORD) setAuthenticated(true);
+          }}
+          style={{ marginTop: 10, padding: 10 }}
+        >
+          Login
+        </button>
+      </div>
+    );
+  }
 
   const renderArea = (area) => (
     <div key={area.name} style={{ marginBottom: isMobile() ? 20 : 10 }}>
-      <h3 style={{ color: area.color, fontSize: isMobile() ? 20 : 16 }}>{area.name}</h3>
+      <h3 style={{ color: area.color, fontSize: isMobile() ? 22 : 18, fontWeight: "bold" }}>{area.name}</h3>
       <div style={{
         display: "grid",
         gridTemplateColumns: isMobile() ? "repeat(2,1fr)" : "repeat(5,1fr)",
@@ -146,12 +160,12 @@ export default function Dashboard() {
       }}>
         {area.positions.map(pos => (
           <Card key={pos} color={area.color}>
-            <div style={{ fontSize: isMobile() ? 16 : 12 }}>{pos}</div>
+            <div style={{ fontSize: isMobile() ? 18 : 14, fontWeight: "600" }}>{pos}</div>
             <select
               disabled={locked}
-              value={(data[currentTeam] || {})[pos] || ""}
+              value={(localData[currentTeam] || {})[pos] || ""}
               onChange={e => assign(pos, e.target.value)}
-              style={{ width: "100%", fontSize: isMobile() ? 16 : 11 }}
+              style={{ width: "100%", fontSize: isMobile() ? 16 : 12 }}
             >
               <option value="">Select</option>
               {(pos.includes("Supervisor")
@@ -167,26 +181,30 @@ export default function Dashboard() {
     </div>
   );
 
-  const assigned = Object.values(data[currentTeam] || {}).filter(Boolean);
+  // 🔄 AUTO REFRESH HANDLER
+  useEffect(() => {
+    if (refreshTimer) clearInterval(refreshTimer);
+
+    if (refreshInterval > 0) {
+      const timer = setInterval(() => {
+        window.location.reload();
+      }, refreshInterval * 60000);
+      setRefreshTimer(timer);
+    }
+
+    return () => {
+      if (refreshTimer) clearInterval(refreshTimer);
+    };
+  }, [refreshInterval]);
+
+  const assigned = Object.values(localData[currentTeam] || {}).filter(Boolean);
   const free = employees[currentTeam].filter(e => !assigned.includes(e));
 
   return (
-    <div style={{
-      background: "#020617",
-      color: "white",
-      minHeight: "100vh",
-      padding: isMobile() ? 15 : 10
-    }}>
+    <div style={{ background: "#020617", color: "white", minHeight: "100vh", padding: 15 }}>
 
-      {/* HEADER */}
-      <div style={{
-        display: "flex",
-        flexDirection: isMobile() ? "column" : "row",
-        justifyContent: "space-between",
-        marginBottom: 10,
-        gap: 10
-      }}>
-        <h1 style={{ fontSize: isMobile() ? 26 : 20 }}>📺 Planning Dashboard</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+        <h1 style={{ fontSize: isMobile() ? 28 : 22, fontWeight: "bold" }}>📺 Planning Dashboard</h1>
 
         <div style={{ display: "flex", gap: 10 }}>
           {teams.map(t => (
@@ -194,8 +212,8 @@ export default function Dashboard() {
               key={t}
               onClick={() => setCurrentTeam(t)}
               style={{
-                padding: isMobile() ? "10px 16px" : "5px 10px",
-                fontSize: isMobile() ? 16 : 12,
+                padding: "8px 14px",
+                fontSize: 14,
                 background: currentTeam === t ? "#22c55e" : "#1f2937",
                 borderRadius: 8
               }}
@@ -207,23 +225,35 @@ export default function Dashboard() {
           <button onClick={() => setLocked(!locked)}>
             {locked ? "🔒" : "🔓"}
           </button>
+
+          <button onClick={applyChanges} style={{ background: "#22c55e", padding: "8px 12px" }}>
+            ✅ Apply
+          </button>
+
+          <select
+            value={refreshInterval}
+            onChange={(e) => setRefreshInterval(Number(e.target.value))}
+            style={{ padding: "6px", background: "#1f2937", color: "white", borderRadius: 6 }}
+          >
+            <option value={0}>No Refresh</option>
+            <option value={5}>5 min</option>
+            <option value={10}>10 min</option>
+            <option value={15}>15 min</option>
+            <option value={30}>30 min</option>
+            <option value={60}>60 min</option>
+          </select>
         </div>
       </div>
 
-      {/* Leadership */}
       <div style={{ marginBottom: 10 }}>
-        <h2 style={{ color: "#facc15" }}>👔 Leadership</h2>
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: isMobile() ? "repeat(2,1fr)" : "repeat(4,1fr)",
-          gap: 10
-        }}>
+        <h2 style={{ color: "#facc15", fontSize: 20 }}>👔 Leadership</h2>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile() ? "repeat(2,1fr)" : "repeat(4,1fr)", gap: 10 }}>
           {leadershipPositions.map(pos => (
             <Card key={pos} color="#facc15">
-              <div>{pos}</div>
+              <div style={{ fontWeight: "600" }}>{pos}</div>
               <select
                 disabled={locked}
-                value={(data[currentTeam] || {})[pos] || ""}
+                value={(localData[currentTeam] || {})[pos] || ""}
                 onChange={e => assign(pos, e.target.value)}
               >
                 <option value="">Select</option>
@@ -237,13 +267,11 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Areas */}
       {areas.map(renderArea)}
 
-      {/* Picking */}
       <div>
-        <h3 style={{ color: "#4ade80" }}>📦 Picking — {free.length}</h3>
-        <div style={{ fontSize: isMobile() ? 14 : 11 }}>{free.join(", ")}</div>
+        <h3 style={{ color: "#4ade80", fontSize: 18 }}>📦 Picking — {free.length}</h3>
+        <div style={{ fontSize: 13 }}>{free.join(", ")}</div>
       </div>
     </div>
   );

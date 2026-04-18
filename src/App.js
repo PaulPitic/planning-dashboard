@@ -19,6 +19,7 @@ try {
 }
 
 const PASSWORD = "1234";
+
 const isMobile = () => window.innerWidth < 900;
 
 const Card = ({ children, color }) => (
@@ -55,17 +56,48 @@ const areas = [
 
 const teams = ["Team A", "Team B"];
 
-const commonSupervisors = ["Marciano Dekker","Jan Schulz","Cyrille Berkelaar","Anna Cetera","Brahim Said Yousef"];
+const commonSupervisors = [
+  "Marciano Dekker","Jan Schulz","Cyrille Berkelaar",
+  "Anna Cetera","Brahim Said Yousef"
+];
+
 const commonCoordinators = [
   "Kucharska Wioleta","Janulevicius Antanas",
   "Sotirios Sampaliotis","Pitic Paul-Ioan"
 ];
 
 const employees = {
-  supervisors: { "Team A": commonSupervisors, "Team B": commonSupervisors },
-  coordinators: { "Team A": commonCoordinators, "Team B": commonCoordinators },
-  "Team A": [],
-  "Team B": []
+  supervisors: {
+    "Team A": commonSupervisors,
+    "Team B": commonSupervisors,
+  },
+  coordinators: {
+    "Team A": commonCoordinators,
+    "Team B": commonCoordinators,
+  },
+
+  "Team A": [
+    "Arestov Oleksandr","Angheluta Dan","Biudiachenko Oleksander","Chrobak Jaroslaw",
+    "Diachenko Maria","Fesenko Anna","Fouka Eleni","Hamerla Paula",
+    "Iacob Ioana Adriana","Karolin Adam","Kaznowska Olivia","Klaudia Voros",
+    "Kwansungnern Ketwadi","Kytsak Rostyslav","Maksymiuk Jacek","Marcin Szumilas",
+    "Muravia Arsenii","Oles Katarzyna","Oliinyk Ruslan","Palade Mihaela",
+    "Parzyszek Lukasz","Polehenko Snizhana","Raluca Tarabacu","Romanik Mariusz",
+    "Ringma Mario","Socha Ewelina","Svistula Oleksii","Tsioumas Panagiotis",
+    "Varava Sofiia","Veer v.d Kees","Vilkhova Alina","Zan Ewa"
+  ],
+
+  "Team B": [
+    "Baziuk Karyna","Carizonni Victoria","Cetera Adrian","Chrobak Marta",
+    "Cuchillo Lopez Eloi","Debets Henk","Diaz Soler Arslan","Fanelli Samson",
+    "Firek Piotr","Gnanasundarm G. Theepan","Hudema Cristina","Ivanenko Artem",
+    "Jackiewicz Aleksandra","Kicosova Zuzana","Lahodiienko Oleh","Mazgula Adam",
+    "Natiri Theo","Orlowski Robert","Prifti Ervis","Radus Alexandru",
+    "Rapan Adrian","Rodrigues Joao","Shavb Yelyzaveta","Siekierko Samanta",
+    "Slavkovsky Martin (trainer)","Socol Emmanuel","Stipinas Aurimas",
+    "Stryzh Anastasia","Szabo Ibolya","Ursaciuc Daniel",
+    "Vysockaja Valentina","Wasilewski Jacek"
+  ]
 };
 
 export default function Dashboard() {
@@ -91,13 +123,11 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!db) return;
-
     const unsub = onSnapshot(doc(db, "dashboard", "data"), (docSnap) => {
       if (docSnap.exists()) {
         setLocalData(docSnap.data());
       }
     });
-
     return () => unsub();
   }, []);
 
@@ -122,17 +152,21 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (refreshInterval <= 0) return;
-
-    const timer = setInterval(() => {
-      window.location.reload();
-    }, refreshInterval * 60000);
-
+    const timer = setInterval(() => window.location.reload(), refreshInterval * 60000);
     return () => clearInterval(timer);
   }, [refreshInterval]);
 
   if (!authenticated) {
     return (
-      <div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center", background: "#020617", color: "white", flexDirection: "column" }}>
+      <div style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "#020617",
+        color: "white",
+        flexDirection: "column"
+      }}>
         <h2>🔐 Enter Password</h2>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button onClick={() => {
@@ -140,12 +174,16 @@ export default function Dashboard() {
             localStorage.setItem("auth", "true");
             setAuthenticated(true);
           }
-        }}>Login</button>
+        }}>
+          Login
+        </button>
       </div>
     );
   }
 
   const teamData = localData[currentTeam] || {};
+  const assigned = Object.values(teamData).filter(Boolean);
+  const free = employees[currentTeam].filter(e => !assigned.includes(e));
 
   const renderArea = (area) => (
     <div key={area.name}>
@@ -173,9 +211,6 @@ export default function Dashboard() {
     </div>
   );
 
-  const assigned = Object.values(teamData).filter(Boolean);
-  const free = employees[currentTeam].filter(e => !assigned.includes(e));
-
   return (
     <div style={{ background: "#020617", color: "white", minHeight: "100vh" }}>
       <h1>📺 Planning Dashboard</h1>
@@ -202,7 +237,9 @@ export default function Dashboard() {
       <button onClick={() => {
         localStorage.removeItem("auth");
         setAuthenticated(false);
-      }}>Logout</button>
+      }}>
+        Logout
+      </button>
 
       <h2>👔 Leadership</h2>
       {areas.map(renderArea)}

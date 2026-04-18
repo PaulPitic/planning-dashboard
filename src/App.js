@@ -18,8 +18,7 @@ try {
   console.error("Firebase init error", e);
 }
 
-const PASSWORD = "1234"; // 🔐 CHANGE THIS
-
+const PASSWORD = "1234";
 const isMobile = () => window.innerWidth < 900;
 
 const Card = ({ children, color }) => (
@@ -29,8 +28,7 @@ const Card = ({ children, color }) => (
     padding: isMobile() ? 16 : 12,
     borderLeft: `8px solid ${color}`,
     boxShadow: "0 6px 18px rgba(0,0,0,0.8)",
-    color: "#f1f5f9",
-    fontWeight: "500"
+    color: "#f1f5f9"
   }}>
     {children}
   </div>
@@ -66,8 +64,8 @@ const commonCoordinators = [
 const employees = {
   supervisors: { "Team A": commonSupervisors, "Team B": commonSupervisors },
   coordinators: { "Team A": commonCoordinators, "Team B": commonCoordinators },
-  "Team A": [/* keep your list */],
-  "Team B": [/* keep your list */],
+  "Team A": [],
+  "Team B": []
 };
 
 export default function Dashboard() {
@@ -104,10 +102,7 @@ export default function Dashboard() {
   }, []);
 
   const applyChanges = async () => {
-    if (!db) {
-      alert("Firebase not configured");
-      return;
-    }
+    if (!db) return;
     await setDoc(doc(db, "dashboard", "data"), localData);
   };
 
@@ -125,7 +120,6 @@ export default function Dashboard() {
     setLocalData(updated);
   };
 
-  // 🔄 Auto refresh
   useEffect(() => {
     if (refreshInterval <= 0) return;
 
@@ -138,33 +132,20 @@ export default function Dashboard() {
 
   if (!authenticated) {
     return (
-      <div style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#020617",
-        color: "white",
-        flexDirection: "column"
-      }}>
-        <h2 style={{ fontSize: 28 }}>🔐 Enter Password</h2>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{ padding: 12, fontSize: 20 }}
-        />
+      <div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center", background: "#020617", color: "white", flexDirection: "column" }}>
+        <h2>🔐 Enter Password</h2>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button onClick={() => {
           if (password === PASSWORD) {
             localStorage.setItem("auth", "true");
             setAuthenticated(true);
           }
-        }}>
-          Login
-        </button>
+        }}>Login</button>
       </div>
     );
   }
+
+  const teamData = localData[currentTeam] || {};
 
   const renderArea = (area) => (
     <div key={area.name}>
@@ -175,7 +156,7 @@ export default function Dashboard() {
             <div>{pos}</div>
             <select
               disabled={locked}
-              value={(localData[currentTeam] || {})[pos] || ""}
+              value={teamData[pos] || ""}
               onChange={e => assign(pos, e.target.value)}
             >
               <option value="">Select</option>
@@ -192,7 +173,7 @@ export default function Dashboard() {
     </div>
   );
 
-  const assigned = Object.values(localData[currentTeam] || {}).filter(Boolean);
+  const assigned = Object.values(teamData).filter(Boolean);
   const free = employees[currentTeam].filter(e => !assigned.includes(e));
 
   return (
@@ -221,12 +202,9 @@ export default function Dashboard() {
       <button onClick={() => {
         localStorage.removeItem("auth");
         setAuthenticated(false);
-      }}>
-        Logout
-      </button>
+      }}>Logout</button>
 
       <h2>👔 Leadership</h2>
-
       {areas.map(renderArea)}
 
       <h3>📦 Picking — {free.length}</h3>

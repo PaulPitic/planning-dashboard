@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
@@ -92,7 +90,6 @@ const employees = {
 
 export default function Dashboard() {
   const [refreshInterval, setRefreshInterval] = useState(0); // minutes
-  const [refreshTimer, setRefreshTimer] = useState(null);
   const [currentTeam, setCurrentTeam] = useState("Team A");
   const [locked, setLocked] = useState(true);
   const [data, setData] = useState({});
@@ -196,20 +193,15 @@ export default function Dashboard() {
     </div>
   );
 
-  // 🔄 AUTO REFRESH HANDLER
+  // 🔄 AUTO REFRESH HANDLER (fixed - no crash loop)
   useEffect(() => {
-    if (refreshTimer) clearInterval(refreshTimer);
+    if (refreshInterval <= 0) return;
 
-    if (refreshInterval > 0) {
-      const timer = setInterval(() => {
-        window.location.reload();
-      }, refreshInterval * 60000);
-      setRefreshTimer(timer);
-    }
+    const timer = setInterval(() => {
+      window.location.reload();
+    }, refreshInterval * 60000);
 
-    return () => {
-      if (refreshTimer) clearInterval(refreshTimer);
-    };
+    return () => clearInterval(timer);
   }, [refreshInterval]);
 
   const assigned = Object.values(localData[currentTeam] || {}).filter(Boolean);

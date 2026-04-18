@@ -92,13 +92,25 @@ export default function Dashboard() {
   const [refreshInterval, setRefreshInterval] = useState(0); // minutes
   const [currentTeam, setCurrentTeam] = useState("Team A");
   const [locked, setLocked] = useState(true);
-  const [data, setData] = useState({});
-  const [localData, setLocalData] = useState({});
+  const createEmptyData = () => {
+    const obj = {};
+    teams.forEach(t => {
+      obj[t] = {};
+      leadershipPositions.forEach(p => obj[t][p] = "");
+      areas.forEach(a => a.positions.forEach(p => obj[t][p] = ""));
+    });
+    return obj;
+  };
+
+  const [data, setData] = useState(createEmptyData());
+  const [localData, setLocalData] = useState(createEmptyData());
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    if (!db) return;
+    if (!db) {
+      return; // no firebase yet, but UI still works
+    }
 
     const unsub = onSnapshot(doc(db, "dashboard", "data"), (docSnap) => {
       if (docSnap.exists()) {

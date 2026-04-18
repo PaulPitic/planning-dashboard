@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
@@ -8,8 +10,15 @@ const firebaseConfig = {
   projectId: "YOUR_PROJECT_ID",
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+let db = null;
+try {
+  if (firebaseConfig.apiKey !== "YOUR_KEY") {
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+  }
+} catch (e) {
+  console.error("Firebase init error", e);
+}
 
 const PASSWORD = "1234"; // 🔐 CHANGE THIS
 
@@ -92,6 +101,8 @@ export default function Dashboard() {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
+    if (!db) return;
+
     const unsub = onSnapshot(doc(db, "dashboard", "data"), (docSnap) => {
       if (docSnap.exists()) {
         setData(docSnap.data());
@@ -102,6 +113,10 @@ export default function Dashboard() {
   }, []);
 
   const applyChanges = async () => {
+    if (!db) {
+      alert("Firebase not configured");
+      return;
+    }
     await setDoc(doc(db, "dashboard", "data"), localData);
   };
 
@@ -276,4 +291,3 @@ export default function Dashboard() {
     </div>
   );
 }
-

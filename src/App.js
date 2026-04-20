@@ -3,29 +3,21 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
 
 /* =====================================================
-   FIREBASE CONFIG  (replace with your real values)
+   FIREBASE (READY)
 ===================================================== */
 const firebaseConfig = {
-  apiKey: "YOUR_KEY",
-  authDomain: "YOUR_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
+  apiKey: "AIzaSyBF-W5EwRFF0baYzj-jIh8vuCBh3cj9Wn8",
+  authDomain: "planning-dashboard-53c9f.firebaseapp.com",
+  projectId: "planning-dashboard-53c9f",
 };
 
-const PASSWORD = "1234"; // change this
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 /* =====================================================
-   FIREBASE INIT
+   PASSWORD
 ===================================================== */
-let db = null;
-
-try {
-  if (firebaseConfig.apiKey !== "YOUR_KEY") {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-  }
-} catch (err) {
-  console.error(err);
-}
+const PASSWORD = "1234";
 
 /* =====================================================
    HELPERS
@@ -38,9 +30,9 @@ const Card = ({ children, color }) => (
       background: "#0f172a",
       color: "#f8fafc",
       borderLeft: `8px solid ${color}`,
-      borderRadius: 12,
+      borderRadius: 14,
       padding: 12,
-      boxShadow: "0 6px 16px rgba(0,0,0,0.45)",
+      boxShadow: "0 6px 16px rgba(0,0,0,0.4)",
     }}
   >
     {children}
@@ -50,7 +42,6 @@ const Card = ({ children, color }) => (
 /* =====================================================
    STRUCTURE
 ===================================================== */
-
 const teams = ["Team A", "Team B"];
 
 const leadershipPositions = [
@@ -100,8 +91,7 @@ const areas = [
 /* =====================================================
    STAFF
 ===================================================== */
-
-const commonSupervisors = [
+const supervisors = [
   "Marciano Dekker",
   "Jan Schulz",
   "Cyrille Berkelaar",
@@ -109,7 +99,7 @@ const commonSupervisors = [
   "Brahim Said Yousef",
 ];
 
-const commonCoordinators = [
+const coordinators = [
   "Kucharska Wioleta",
   "Janulevicius Antanas",
   "Sotirios Sampaliotis",
@@ -117,16 +107,6 @@ const commonCoordinators = [
 ];
 
 const employees = {
-  supervisors: {
-    "Team A": commonSupervisors,
-    "Team B": commonSupervisors,
-  },
-
-  coordinators: {
-    "Team A": commonCoordinators,
-    "Team B": commonCoordinators,
-  },
-
   "Team A": [
     "Arestov Oleksandr",
     "Angheluta Dan",
@@ -199,9 +179,8 @@ const employees = {
 };
 
 /* =====================================================
-   EMPTY TEMPLATE
+   EMPTY DATA
 ===================================================== */
-
 function createEmptyData() {
   const obj = {};
 
@@ -225,7 +204,6 @@ function createEmptyData() {
 /* =====================================================
    APP
 ===================================================== */
-
 export default function App() {
   const [authenticated, setAuthenticated] = useState(
     localStorage.getItem("auth") === "true"
@@ -238,12 +216,8 @@ export default function App() {
 
   const [boardData, setBoardData] = useState(createEmptyData());
 
-  /* =====================================================
-     LIVE FIREBASE LISTENER
-  ===================================================== */
+  /* LIVE SYNC */
   useEffect(() => {
-    if (!db) return;
-
     const ref = doc(db, "dashboard", "shared");
 
     const unsub = onSnapshot(ref, (snap) => {
@@ -259,9 +233,7 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  /* =====================================================
-     AUTO REFRESH
-  ===================================================== */
+  /* AUTO REFRESH */
   useEffect(() => {
     if (refreshInterval <= 0) return;
 
@@ -272,9 +244,7 @@ export default function App() {
     return () => clearInterval(timer);
   }, [refreshInterval]);
 
-  /* =====================================================
-     LOGIN SCREEN
-  ===================================================== */
+  /* LOGIN */
   if (!authenticated) {
     return (
       <div
@@ -305,7 +275,6 @@ export default function App() {
               setAuthenticated(true);
             }
           }}
-          style={{ padding: "10px 18px" }}
         >
           Login
         </button>
@@ -313,14 +282,8 @@ export default function App() {
     );
   }
 
-  /* =====================================================
-     SHARED TEAM DATA
-  ===================================================== */
   const teamData = boardData[currentTeam] || {};
 
-  /* =====================================================
-     CHANGE POSITION
-  ===================================================== */
   const assign = (position, value) => {
     if (locked) return;
 
@@ -332,35 +295,21 @@ export default function App() {
       },
     };
 
-    setBoardData(updated); // instant local
+    setBoardData(updated);
   };
 
-  /* =====================================================
-     APPLY TO FIREBASE
-  ===================================================== */
   const applyChanges = async () => {
-    if (!db) {
-      alert("Firebase not configured");
-      return;
-    }
-
     await setDoc(doc(db, "dashboard", "shared"), boardData);
   };
 
-  /* =====================================================
-     FREE PEOPLE = PICKING
-  ===================================================== */
   const assigned = Object.values(teamData).filter(Boolean);
 
   const free = employees[currentTeam].filter(
     (name) => !assigned.includes(name)
   );
 
-  /* =====================================================
-     RENDER AREA
-  ===================================================== */
   const renderArea = (area) => (
-    <div key={area.name} style={{ marginBottom: 16 }}>
+    <div key={area.name} style={{ marginBottom: 18 }}>
       <h3 style={{ color: area.color }}>{area.name}</h3>
 
       <div
@@ -394,9 +343,6 @@ export default function App() {
     </div>
   );
 
-  /* =====================================================
-     UI
-  ===================================================== */
   return (
     <div
       style={{
@@ -470,8 +416,8 @@ export default function App() {
               <option value="">Select</option>
 
               {(pos.includes("Supervisor")
-                ? employees.supervisors[currentTeam]
-                : employees.coordinators[currentTeam]
+                ? supervisors
+                : coordinators
               ).map((name) => (
                 <option key={name}>{name}</option>
               ))}

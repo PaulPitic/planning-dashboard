@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
@@ -20,9 +21,6 @@ const db = getFirestore(app);
 const PASSWORD = "1234";
 const isMobile = () => window.innerWidth < 900;
 
-/* =====================================================
-   UI
-===================================================== */
 const buttonStyle = {
   padding: "10px 14px",
   borderRadius: 10,
@@ -109,7 +107,7 @@ const areas = [
 ];
 
 /* =====================================================
-   DEFAULT STAFF
+   FULL STAFF LISTS
 ===================================================== */
 const defaultStaff = {
   supervisors: [
@@ -119,14 +117,83 @@ const defaultStaff = {
     "Anna Cetera",
     "Brahim Said Yousef",
   ],
+
   coordinators: [
     "Kucharska Wioleta",
     "Janulevicius Antanas",
     "Sotirios Sampaliotis",
     "Pitic Paul-Ioan",
   ],
-  "Team A": ["Arestov Oleksandr", "Angheluta Dan"],
-  "Team B": ["Baziuk Karyna", "Carizonni Victoria"],
+
+  "Team A": [
+    "Arestov Oleksandr",
+    "Angheluta Dan",
+    "Biudiachenko Oleksander",
+    "Chrobak Jaroslaw",
+    "Diachenko Maria",
+    "Fesenko Anna",
+    "Fouka Eleni",
+    "Hamerla Paula",
+    "Iacob Ioana Adriana",
+    "Karolin Adam",
+    "Kaznowska Olivia",
+    "Klaudia Voros",
+    "Kwansungnern Ketwadi",
+    "Kytsak Rostyslav",
+    "Maksymiuk Jacek",
+    "Marcin Szumilas",
+    "Muravia Arsenii",
+    "Oles Katarzyna",
+    "Oliinyk Ruslan",
+    "Palade Mihaela",
+    "Parzyszek Lukasz",
+    "Polehenko Snizhana",
+    "Raluca Tarabacu",
+    "Romanik Mariusz",
+    "Ringma Mario",
+    "Socha Ewelina",
+    "Svistula Oleksii",
+    "Tsioumas Panagiotis",
+    "Varava Sofiia",
+    "Veer v.d Kees",
+    "Vilkhova Alina",
+    "Zan Ewa",
+  ],
+
+  "Team B": [
+    "Baziuk Karyna",
+    "Carizonni Victoria",
+    "Cetera Adrian",
+    "Chrobak Marta",
+    "Cuchillo Lopez Eloi",
+    "Debets Henk",
+    "Diaz Soler Arslan",
+    "Fanelli Samson",
+    "Firek Piotr",
+    "Gnanasundarm G. Theepan",
+    "Hudema Cristina",
+    "Ivanenko Artem",
+    "Jackiewicz Aleksandra",
+    "Kicosova Zuzana",
+    "Lahodiienko Oleh",
+    "Mazgula Adam",
+    "Natiri Theo",
+    "Orlowski Robert",
+    "Prifti Ervis",
+    "Radus Alexandru",
+    "Rapan Adrian",
+    "Rodrigues Joao",
+    "Shavb Yelyzaveta",
+    "Siekierko Samanta",
+    "Slavkovsky Martin (trainer)",
+    "Socol Emmanuel",
+    "Stipinas Aurimas",
+    "Stryzh Anastasia",
+    "Szabo Ibolya",
+    "Ursaciuc Daniel",
+    "Vysockaja Valentina",
+    "Wasilewski Jacek",
+  ],
 };
 
 /* =====================================================
@@ -236,9 +303,6 @@ export default function App() {
 
   const teamData = boardData[team] || {};
 
-  /* =====================================================
-     SAVE SHARED
-  ===================================================== */
   const saveShared = async (
     nextBoard = boardData,
     nextStaff = staff,
@@ -251,9 +315,6 @@ export default function App() {
     });
   };
 
-  /* =====================================================
-     ASSIGN
-  ===================================================== */
   const assign = (position, value) => {
     if (locked) return;
 
@@ -268,9 +329,6 @@ export default function App() {
     setBoardData(updated);
   };
 
-  /* =====================================================
-     STAFF MANAGER
-  ===================================================== */
   const addName = () => {
     if (!newName.trim()) return;
 
@@ -289,15 +347,9 @@ export default function App() {
     });
   };
 
-  /* =====================================================
-     PICKING
-  ===================================================== */
   const assigned = Object.values(teamData).filter(Boolean);
   const free = staff[team].filter((n) => !assigned.includes(n));
 
-  /* =====================================================
-     AREA RENDER
-  ===================================================== */
   const renderArea = (area) => (
     <div key={area.name} style={{ marginBottom: 18 }}>
       <h3 style={{ color: area.color }}>{area.name}</h3>
@@ -330,7 +382,6 @@ export default function App() {
               }}
             >
               <option value="">Select</option>
-
               {staff[team].map((n) => (
                 <option key={n}>{n}</option>
               ))}
@@ -350,17 +401,9 @@ export default function App() {
         padding: 16,
       }}
     >
-      <h1 style={{ marginBottom: 18 }}>📺 Planning Dashboard</h1>
+      <h1>📺 Planning Dashboard</h1>
 
-      {/* TOP BAR */}
-      <div
-        style={{
-          display: "flex",
-          gap: 10,
-          flexWrap: "wrap",
-          marginBottom: 20,
-        }}
-      >
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20 }}>
         {teams.map((t) => (
           <button
             key={t}
@@ -368,14 +411,12 @@ export default function App() {
             style={{
               ...buttonStyle,
               background: team === t ? "#2563eb" : "#1e293b",
-              border: "1px solid #475569",
             }}
           >
             {t}
           </button>
         ))}
 
-        {/* LOCK / UNLOCK */}
         <button
           onClick={async () => {
             if (locked) {
@@ -393,87 +434,54 @@ export default function App() {
           {locked ? "🔒 Locked" : "🔓 Unlocked"}
         </button>
 
-        {/* APPLY */}
         <button
           onClick={() => saveShared()}
-          style={{
-            ...buttonStyle,
-            background: "#22c55e",
-          }}
+          style={{ ...buttonStyle, background: "#22c55e" }}
         >
           ✅ Apply
         </button>
 
-        {/* STAFF */}
         <button
           onClick={() => setShowStaff(true)}
-          style={{
-            ...buttonStyle,
-            background: "#7c3aed",
-          }}
+          style={{ ...buttonStyle, background: "#7c3aed" }}
         >
           ⚙️ Manage Staff
         </button>
 
-        {/* LOGOUT */}
         <button
           onClick={() => {
             localStorage.removeItem("auth");
             setAuth(false);
           }}
-          style={{
-            ...buttonStyle,
-            background: "#475569",
-          }}
+          style={{ ...buttonStyle, background: "#475569" }}
         >
           Logout
         </button>
       </div>
 
-      {/* UNLOCK POPUP */}
+      {/* Unlock popup */}
       {showUnlock && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,.7)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 999,
-          }}
-        >
-          <div
-            style={{
-              background: "#111827",
-              padding: 20,
-              borderRadius: 14,
-              width: "90%",
-              maxWidth: 380,
-            }}
-          >
+        <div style={{
+          position:"fixed", inset:0, background:"rgba(0,0,0,.7)",
+          display:"flex", justifyContent:"center", alignItems:"center", zIndex:999
+        }}>
+          <div style={{
+            background:"#111827", padding:20, borderRadius:14, width:"90%", maxWidth:380
+          }}>
             <h2>🔐 Unlock Dashboard</h2>
 
             <input
               type="password"
               value={unlockPass}
-              onChange={(e) => setUnlockPass(e.target.value)}
-              style={{
-                width: "100%",
-                padding: 10,
-                borderRadius: 8,
-                marginBottom: 12,
-              }}
+              onChange={(e)=>setUnlockPass(e.target.value)}
+              style={{ width:"100%", padding:10, borderRadius:8, marginBottom:12 }}
             />
 
-            <div style={{ display: "flex", gap: 8 }}>
+            <div style={{ display:"flex", gap:8 }}>
               <button
-                style={{
-                  ...buttonStyle,
-                  background: "#16a34a",
-                }}
-                onClick={async () => {
-                  if (unlockPass === PASSWORD) {
+                style={{ ...buttonStyle, background:"#16a34a" }}
+                onClick={async ()=>{
+                  if(unlockPass===PASSWORD){
                     setLocked(false);
                     setShowUnlock(false);
                     setUnlockPass("");
@@ -485,11 +493,8 @@ export default function App() {
               </button>
 
               <button
-                style={{
-                  ...buttonStyle,
-                  background: "#475569",
-                }}
-                onClick={() => {
+                style={{ ...buttonStyle, background:"#475569" }}
+                onClick={()=>{
                   setShowUnlock(false);
                   setUnlockPass("");
                 }}
@@ -501,39 +506,23 @@ export default function App() {
         </div>
       )}
 
-      {/* STAFF POPUP */}
+      {/* Staff popup */}
       {showStaff && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,.7)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 999,
-          }}
-        >
-          <div
-            style={{
-              background: "#111827",
-              padding: 20,
-              width: "95%",
-              maxWidth: 520,
-              borderRadius: 14,
-            }}
-          >
+        <div style={{
+          position:"fixed", inset:0, background:"rgba(0,0,0,.7)",
+          display:"flex", justifyContent:"center", alignItems:"center", zIndex:999
+        }}>
+          <div style={{
+            background:"#111827", padding:20, width:"95%", maxWidth:520, borderRadius:14
+          }}>
             <h2>⚙️ Staff Manager</h2>
 
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e)=>setCategory(e.target.value)}
               style={{
-                width: "100%",
-                padding: 8,
-                marginBottom: 10,
-                background: "#1e293b",
-                color: "#fff",
+                width:"100%", padding:8, marginBottom:10,
+                background:"#1e293b", color:"#fff"
               }}
             >
               <option>Team A</option>
@@ -542,60 +531,41 @@ export default function App() {
               <option>coordinators</option>
             </select>
 
-            <div
-              style={{
-                display: "flex",
-                gap: 8,
-                marginBottom: 12,
-              }}
-            >
+            <div style={{ display:"flex", gap:8, marginBottom:12 }}>
               <input
                 placeholder="New Name"
                 value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                style={{
-                  flex: 1,
-                  padding: 8,
-                  borderRadius: 8,
-                }}
+                onChange={(e)=>setNewName(e.target.value)}
+                style={{ flex:1, padding:8, borderRadius:8 }}
               />
 
               <button
                 onClick={addName}
-                style={{
-                  ...buttonStyle,
-                  background: "#16a34a",
-                }}
+                style={{ ...buttonStyle, background:"#16a34a" }}
               >
                 ➕ Add
               </button>
             </div>
 
-            <div
-              style={{
-                maxHeight: 320,
-                overflowY: "auto",
-                marginBottom: 14,
-              }}
-            >
-              {staff[category].map((n) => (
+            <div style={{ maxHeight:320, overflowY:"auto", marginBottom:14 }}>
+              {staff[category].map((n)=>(
                 <div
                   key={n}
                   style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    padding: "6px 0",
-                    borderBottom: "1px solid #374151",
+                    display:"flex",
+                    justifyContent:"space-between",
+                    padding:"6px 0",
+                    borderBottom:"1px solid #374151"
                   }}
                 >
                   <span>{n}</span>
 
                   <button
-                    onClick={() => removeName(category, n)}
+                    onClick={()=>removeName(category,n)}
                     style={{
                       ...buttonStyle,
-                      background: "#dc2626",
-                      padding: "6px 10px",
+                      background:"#dc2626",
+                      padding:"6px 10px"
                     }}
                   >
                     🗑
@@ -604,25 +574,17 @@ export default function App() {
               ))}
             </div>
 
-            <div style={{ display: "flex", gap: 8 }}>
+            <div style={{ display:"flex", gap:8 }}>
               <button
-                onClick={async () => {
-                  await saveShared(boardData, staff, locked);
-                }}
-                style={{
-                  ...buttonStyle,
-                  background: "#22c55e",
-                }}
+                onClick={async ()=>await saveShared(boardData, staff, locked)}
+                style={{ ...buttonStyle, background:"#22c55e" }}
               >
                 💾 Save Staff
               </button>
 
               <button
-                onClick={() => setShowStaff(false)}
-                style={{
-                  ...buttonStyle,
-                  background: "#475569",
-                }}
+                onClick={()=>setShowStaff(false)}
+                style={{ ...buttonStyle, background:"#475569" }}
               >
                 Close
               </button>
@@ -631,38 +593,29 @@ export default function App() {
         </div>
       )}
 
-      {/* LEADERSHIP */}
+      {/* Leadership */}
       <div
         style={{
-          display: "grid",
-          gap: 10,
-          marginBottom: 20,
-          gridTemplateColumns: isMobile()
-            ? "repeat(2,1fr)"
-            : "repeat(4,1fr)",
+          display:"grid",
+          gap:10,
+          marginBottom:20,
+          gridTemplateColumns:isMobile() ? "repeat(2,1fr)" : "repeat(4,1fr)"
         }}
       >
-        {leadershipPositions.map((pos) => (
+        {leadershipPositions.map((pos)=>(
           <Card key={pos} color="#facc15">
-            <div
-              style={{
-                fontWeight: 700,
-                marginBottom: 8,
-              }}
-            >
-              {pos}
-            </div>
+            <div style={{ fontWeight:700, marginBottom:8 }}>{pos}</div>
 
             <select
               disabled={locked}
               value={teamData[pos] || ""}
-              onChange={(e) => assign(pos, e.target.value)}
+              onChange={(e)=>assign(pos,e.target.value)}
               style={{
-                width: "100%",
-                padding: 8,
-                background: "#1e293b",
-                color: "#fff",
-                borderRadius: 8,
+                width:"100%",
+                padding:8,
+                background:"#1e293b",
+                color:"#fff",
+                borderRadius:8
               }}
             >
               <option value="">Select</option>
@@ -670,7 +623,7 @@ export default function App() {
               {(pos.includes("Supervisor")
                 ? staff.supervisors
                 : staff.coordinators
-              ).map((n) => (
+              ).map((n)=>(
                 <option key={n}>{n}</option>
               ))}
             </select>
@@ -678,11 +631,11 @@ export default function App() {
         ))}
       </div>
 
-      {/* OPERATIONS */}
+      {/* Operations */}
       {areas.map(renderArea)}
 
-      {/* PICKING */}
-      <h2 style={{ color: "#4ade80" }}>
+      {/* Picking */}
+      <h2 style={{ color:"#4ade80" }}>
         📦 Picking ({free.length})
       </h2>
 

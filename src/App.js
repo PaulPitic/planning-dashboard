@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
@@ -107,7 +106,7 @@ const areas = [
 ];
 
 /* =====================================================
-   FULL STAFF LISTS
+   STAFF
 ===================================================== */
 const defaultStaff = {
   supervisors: [
@@ -117,14 +116,12 @@ const defaultStaff = {
     "Anna Cetera",
     "Brahim Said Yousef",
   ],
-
   coordinators: [
     "Kucharska Wioleta",
     "Janulevicius Antanas",
     "Sotirios Sampaliotis",
     "Pitic Paul-Ioan",
   ],
-
   "Team A": [
     "Arestov Oleksandr",
     "Angheluta Dan",
@@ -159,7 +156,6 @@ const defaultStaff = {
     "Vilkhova Alina",
     "Zan Ewa",
   ],
-
   "Team B": [
     "Baziuk Karyna",
     "Carizonni Victoria",
@@ -221,15 +217,14 @@ export default function App() {
   const [boardData, setBoardData] = useState(createEmptyData());
   const [staff, setStaff] = useState(defaultStaff);
   const [locked, setLocked] = useState(true);
-
   const [team, setTeam] = useState("Team A");
+
+  const [showUnlock, setShowUnlock] = useState(false);
+  const [unlockPass, setUnlockPass] = useState("");
 
   const [showStaff, setShowStaff] = useState(false);
   const [newName, setNewName] = useState("");
   const [category, setCategory] = useState("Team A");
-
-  const [showUnlock, setShowUnlock] = useState(false);
-  const [unlockPass, setUnlockPass] = useState("");
 
   /* =====================================================
      LIVE SYNC
@@ -248,11 +243,13 @@ export default function App() {
             ? data.locked
             : true
         );
+        setTeam(data.currentTeam || "Team A");
       } else {
         setDoc(ref, {
           board: createEmptyData(),
           staff: defaultStaff,
           locked: true,
+          currentTeam: "Team A",
         });
       }
     });
@@ -265,32 +262,30 @@ export default function App() {
   ===================================================== */
   if (!auth) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#020617",
-          color: "#fff",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          gap: 12,
-        }}
-      >
+      <div style={{
+        minHeight:"100vh",
+        background:"#020617",
+        color:"#fff",
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        flexDirection:"column",
+        gap:12
+      }}>
         <h2>🔐 Dashboard Login</h2>
 
         <input
           type="password"
           value={pass}
-          onChange={(e) => setPass(e.target.value)}
-          style={{ padding: 10, borderRadius: 8 }}
+          onChange={(e)=>setPass(e.target.value)}
+          style={{padding:10,borderRadius:8}}
         />
 
         <button
-          style={{ ...buttonStyle, background: "#2563eb" }}
-          onClick={() => {
-            if (pass === PASSWORD) {
-              localStorage.setItem("auth", "true");
+          style={{...buttonStyle, background:"#2563eb"}}
+          onClick={()=>{
+            if(pass===PASSWORD){
+              localStorage.setItem("auth","true");
               setAuth(true);
             }
           }}
@@ -306,12 +301,14 @@ export default function App() {
   const saveShared = async (
     nextBoard = boardData,
     nextStaff = staff,
-    nextLocked = locked
+    nextLocked = locked,
+    nextTeam = team
   ) => {
     await setDoc(doc(db, "dashboard", "shared"), {
       board: nextBoard,
       staff: nextStaff,
       locked: nextLocked,
+      currentTeam: nextTeam,
     });
   };
 
@@ -351,38 +348,37 @@ export default function App() {
   const free = staff[team].filter((n) => !assigned.includes(n));
 
   const renderArea = (area) => (
-    <div key={area.name} style={{ marginBottom: 18 }}>
-      <h3 style={{ color: area.color }}>{area.name}</h3>
+    <div key={area.name} style={{marginBottom:18}}>
+      <h3 style={{color:area.color}}>{area.name}</h3>
 
-      <div
-        style={{
-          display: "grid",
-          gap: 10,
-          gridTemplateColumns: isMobile()
-            ? "repeat(2,1fr)"
-            : "repeat(5,1fr)",
-        }}
-      >
-        {area.positions.map((pos) => (
+      <div style={{
+        display:"grid",
+        gap:10,
+        gridTemplateColumns:isMobile()
+          ? "repeat(2,1fr)"
+          : "repeat(5,1fr)"
+      }}>
+        {area.positions.map((pos)=>(
           <Card key={pos} color={area.color}>
-            <div style={{ fontWeight: 700, marginBottom: 8 }}>
+            <div style={{fontWeight:700, marginBottom:8}}>
               {pos}
             </div>
 
             <select
               disabled={locked}
               value={teamData[pos] || ""}
-              onChange={(e) => assign(pos, e.target.value)}
+              onChange={(e)=>assign(pos,e.target.value)}
               style={{
-                width: "100%",
-                padding: 8,
-                background: "#1e293b",
-                color: "#fff",
-                borderRadius: 8,
+                width:"100%",
+                padding:8,
+                background:"#1e293b",
+                color:"#fff",
+                borderRadius:8
               }}
             >
               <option value="">Select</option>
-              {staff[team].map((n) => (
+
+              {staff[team].map((n)=>(
                 <option key={n}>{n}</option>
               ))}
             </select>
@@ -393,24 +389,31 @@ export default function App() {
   );
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#020617",
-        color: "#fff",
-        padding: 16,
-      }}
-    >
+    <div style={{
+      minHeight:"100vh",
+      background:"#020617",
+      color:"#fff",
+      padding:16
+    }}>
       <h1>📺 Planning Dashboard</h1>
 
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20 }}>
-        {teams.map((t) => (
+      {/* TOP BAR */}
+      <div style={{
+        display:"flex",
+        gap:10,
+        flexWrap:"wrap",
+        marginBottom:20
+      }}>
+        {teams.map((t)=>(
           <button
             key={t}
-            onClick={() => setTeam(t)}
+            onClick={async ()=>{
+              setTeam(t);
+              await saveShared(boardData, staff, locked, t);
+            }}
             style={{
               ...buttonStyle,
-              background: team === t ? "#2563eb" : "#1e293b",
+              background:team===t ? "#2563eb" : "#1e293b"
             }}
           >
             {t}
@@ -418,42 +421,42 @@ export default function App() {
         ))}
 
         <button
-          onClick={async () => {
-            if (locked) {
+          onClick={async ()=>{
+            if(locked){
               setShowUnlock(true);
             } else {
               setLocked(true);
-              await saveShared(boardData, staff, true);
+              await saveShared(boardData, staff, true, team);
             }
           }}
           style={{
             ...buttonStyle,
-            background: locked ? "#dc2626" : "#16a34a",
+            background:locked ? "#dc2626" : "#16a34a"
           }}
         >
           {locked ? "🔒 Locked" : "🔓 Unlocked"}
         </button>
 
         <button
-          onClick={() => saveShared()}
-          style={{ ...buttonStyle, background: "#22c55e" }}
+          onClick={()=>saveShared()}
+          style={{...buttonStyle, background:"#22c55e"}}
         >
           ✅ Apply
         </button>
 
         <button
-          onClick={() => setShowStaff(true)}
-          style={{ ...buttonStyle, background: "#7c3aed" }}
+          onClick={()=>setShowStaff(true)}
+          style={{...buttonStyle, background:"#7c3aed"}}
         >
           ⚙️ Manage Staff
         </button>
 
         <button
-          onClick={() => {
+          onClick={()=>{
             localStorage.removeItem("auth");
             setAuth(false);
           }}
-          style={{ ...buttonStyle, background: "#475569" }}
+          style={{...buttonStyle, background:"#475569"}}
         >
           Logout
         </button>
@@ -462,11 +465,20 @@ export default function App() {
       {/* Unlock popup */}
       {showUnlock && (
         <div style={{
-          position:"fixed", inset:0, background:"rgba(0,0,0,.7)",
-          display:"flex", justifyContent:"center", alignItems:"center", zIndex:999
+          position:"fixed",
+          inset:0,
+          background:"rgba(0,0,0,.7)",
+          display:"flex",
+          justifyContent:"center",
+          alignItems:"center",
+          zIndex:999
         }}>
           <div style={{
-            background:"#111827", padding:20, borderRadius:14, width:"90%", maxWidth:380
+            background:"#111827",
+            padding:20,
+            borderRadius:14,
+            width:"90%",
+            maxWidth:380
           }}>
             <h2>🔐 Unlock Dashboard</h2>
 
@@ -474,18 +486,23 @@ export default function App() {
               type="password"
               value={unlockPass}
               onChange={(e)=>setUnlockPass(e.target.value)}
-              style={{ width:"100%", padding:10, borderRadius:8, marginBottom:12 }}
+              style={{
+                width:"100%",
+                padding:10,
+                borderRadius:8,
+                marginBottom:12
+              }}
             />
 
-            <div style={{ display:"flex", gap:8 }}>
+            <div style={{display:"flex", gap:8}}>
               <button
-                style={{ ...buttonStyle, background:"#16a34a" }}
+                style={{...buttonStyle, background:"#16a34a"}}
                 onClick={async ()=>{
                   if(unlockPass===PASSWORD){
                     setLocked(false);
                     setShowUnlock(false);
                     setUnlockPass("");
-                    await saveShared(boardData, staff, false);
+                    await saveShared(boardData, staff, false, team);
                   }
                 }}
               >
@@ -493,7 +510,7 @@ export default function App() {
               </button>
 
               <button
-                style={{ ...buttonStyle, background:"#475569" }}
+                style={{...buttonStyle, background:"#475569"}}
                 onClick={()=>{
                   setShowUnlock(false);
                   setUnlockPass("");
@@ -509,11 +526,20 @@ export default function App() {
       {/* Staff popup */}
       {showStaff && (
         <div style={{
-          position:"fixed", inset:0, background:"rgba(0,0,0,.7)",
-          display:"flex", justifyContent:"center", alignItems:"center", zIndex:999
+          position:"fixed",
+          inset:0,
+          background:"rgba(0,0,0,.7)",
+          display:"flex",
+          justifyContent:"center",
+          alignItems:"center",
+          zIndex:999
         }}>
           <div style={{
-            background:"#111827", padding:20, width:"95%", maxWidth:520, borderRadius:14
+            background:"#111827",
+            padding:20,
+            width:"95%",
+            maxWidth:520,
+            borderRadius:14
           }}>
             <h2>⚙️ Staff Manager</h2>
 
@@ -521,8 +547,11 @@ export default function App() {
               value={category}
               onChange={(e)=>setCategory(e.target.value)}
               style={{
-                width:"100%", padding:8, marginBottom:10,
-                background:"#1e293b", color:"#fff"
+                width:"100%",
+                padding:8,
+                marginBottom:10,
+                background:"#1e293b",
+                color:"#fff"
               }}
             >
               <option>Team A</option>
@@ -531,23 +560,27 @@ export default function App() {
               <option>coordinators</option>
             </select>
 
-            <div style={{ display:"flex", gap:8, marginBottom:12 }}>
+            <div style={{display:"flex", gap:8, marginBottom:12}}>
               <input
                 placeholder="New Name"
                 value={newName}
                 onChange={(e)=>setNewName(e.target.value)}
-                style={{ flex:1, padding:8, borderRadius:8 }}
+                style={{flex:1,padding:8,borderRadius:8}}
               />
 
               <button
                 onClick={addName}
-                style={{ ...buttonStyle, background:"#16a34a" }}
+                style={{...buttonStyle, background:"#16a34a"}}
               >
                 ➕ Add
               </button>
             </div>
 
-            <div style={{ maxHeight:320, overflowY:"auto", marginBottom:14 }}>
+            <div style={{
+              maxHeight:320,
+              overflowY:"auto",
+              marginBottom:14
+            }}>
               {staff[category].map((n)=>(
                 <div
                   key={n}
@@ -574,17 +607,17 @@ export default function App() {
               ))}
             </div>
 
-            <div style={{ display:"flex", gap:8 }}>
+            <div style={{display:"flex", gap:8}}>
               <button
-                onClick={async ()=>await saveShared(boardData, staff, locked)}
-                style={{ ...buttonStyle, background:"#22c55e" }}
+                onClick={async ()=>await saveShared(boardData, staff, locked, team)}
+                style={{...buttonStyle, background:"#22c55e"}}
               >
                 💾 Save Staff
               </button>
 
               <button
                 onClick={()=>setShowStaff(false)}
-                style={{ ...buttonStyle, background:"#475569" }}
+                style={{...buttonStyle, background:"#475569"}}
               >
                 Close
               </button>
@@ -594,17 +627,19 @@ export default function App() {
       )}
 
       {/* Leadership */}
-      <div
-        style={{
-          display:"grid",
-          gap:10,
-          marginBottom:20,
-          gridTemplateColumns:isMobile() ? "repeat(2,1fr)" : "repeat(4,1fr)"
-        }}
-      >
+      <div style={{
+        display:"grid",
+        gap:10,
+        marginBottom:20,
+        gridTemplateColumns:isMobile()
+          ? "repeat(2,1fr)"
+          : "repeat(4,1fr)"
+      }}>
         {leadershipPositions.map((pos)=>(
           <Card key={pos} color="#facc15">
-            <div style={{ fontWeight:700, marginBottom:8 }}>{pos}</div>
+            <div style={{fontWeight:700, marginBottom:8}}>
+              {pos}
+            </div>
 
             <select
               disabled={locked}
@@ -635,7 +670,7 @@ export default function App() {
       {areas.map(renderArea)}
 
       {/* Picking */}
-      <h2 style={{ color:"#4ade80" }}>
+      <h2 style={{color:"#4ade80"}}>
         📦 Picking ({free.length})
       </h2>
 

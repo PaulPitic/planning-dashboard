@@ -858,12 +858,12 @@ export default function App() {
                 ))}
               </select>
             ))}
-          </div>
-        </div>
-      </div>
+                </div>
+    </div>
 
-      {/* RIGHT */}
-      <div style={{
+    {/* RIGHT */}
+    <div
+      style={{
         width: "25%",
         borderLeft: "1px solid #334155",
         display: "flex",

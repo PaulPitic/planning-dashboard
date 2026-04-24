@@ -838,21 +838,21 @@ export default function App() {
                 marginBottom: 10,
               }}
             />
-
-            <button
-              style={{
-                ...buttonStyle,
-                background: "#2563eb",
-              }}
-              onClick={async () => {
-                if (unlockInput === PASSWORD) {
-                  setLocked(false);
-                  setShowUnlock(false);
-                  setUnlockInput("");
-                  await saveShared(boardData, staff, false, team);
-                }
-              }}
-                        >
+<button
+  style={{
+    ...buttonStyle,
+    background: "#2563eb",
+  }}
+  onClick={async () => {
+    if (unlockInput === PASSWORD) {
+      setLocked(false);
+      setShowUnlock(false);
+      setUnlockInput("");
+      await saveShared(boardData, staff, false, team);
+    }
+  }}
+>
+           
               Unlock
             </button>
           </div>

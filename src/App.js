@@ -862,7 +862,7 @@ export default function App() {
       {/* STAFF POPUP */}
       {showStaff && (
         <div style={{
-          position: "fixed",
+          position: "fixed"","
           inset: 0,
           background: "rgba(0,0,0,.7)",
           display: "flex",

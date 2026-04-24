@@ -857,9 +857,9 @@ export default function App() {
             </button>
           </div>
         </div>
-      )}
+            )}
 
-    {/* STAFF POPUP */}
+      {/* STAFF POPUP */}
       {showStaff && (
         <div style={{
           position: "fixed",

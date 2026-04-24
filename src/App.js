@@ -375,21 +375,69 @@ export default function App() {
      ASSIGN
   ===================================================== */
   function assign(roleKey, slotIndex, value, slots) {
-    if (locked) return;
+  if (locked) return;
 
-    const current = safeArray(teamData[roleKey], slots);
-    current[slotIndex] = value;
+  const labelMap = {};
 
-    const updated = {
-      ...boardData,
-      [team]: {
-        ...boardData[team],
-        [roleKey]: current,
-      },
-    };
+  leadership.forEach((x) => {
+    labelMap[x.key] = x.label;
+  });
 
-    setBoardData(updated);
+  areas.forEach((area) => {
+    area.items.forEach((x) => {
+      labelMap[x.key] = x.label;
+      if (x.split) {
+        labelMap[x.key + "_bc"] = x.label + " Break Cover";
+      }
+    });
+  });
+
+  labelMap["notin"] = "Not In";
+
+  if (value) {
+    let duplicateText = null;
+
+    Object.entries(teamData).forEach(([key, arr]) => {
+      if (!Array.isArray(arr)) return;
+
+      arr.forEach((person, idx) => {
+        if (
+          person === value &&
+          !(key === roleKey && idx === slotIndex)
+        ) {
+          const roleName = labelMap[key] || key;
+          duplicateText =
+            value +
+            " already assigned as " +
+            roleName +
+            " Slot " +
+            (idx + 1);
+        }
+      });
+    });
+
+    if (duplicateText) {
+      const ok = window.confirm(
+        duplicateText + "\n\nUse anyway?"
+      );
+
+      if (!ok) return;
+    }
   }
+
+  const current = safeArray(teamData[roleKey], slots);
+  current[slotIndex] = value;
+
+  const updated = {
+    ...boardData,
+    [team]: {
+      ...boardData[team],
+      [roleKey]: current,
+    },
+  };
+
+  setBoardData(updated);
+}
 
   /* =====================================================
      AUTO PICKING

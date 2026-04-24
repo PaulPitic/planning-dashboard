@@ -258,29 +258,63 @@ export default function App() {
   const [newName, setNewName] = useState("");
 
   /* ===================================================== */
-  useEffect(() => {
-    const ref = doc(db, "dashboard", "shared");
 
-    const unsub = onSnapshot(ref, async (snap) => {
-      if (snap.exists()) {
-        const data = snap.data();
+   useEffect(() => {
+  const ref = doc(db, "dashboard", "shared");
 
-        setBoardData(data.board || createBoard());
-        setStaff(data.staff || defaultStaff);
-        setLocked(data.locked ?? true);
-        setTeam(data.currentTeam || "Team A");
-      } else {
-        await setDoc(ref, {
-          board: createBoard(),
-          staff: defaultStaff,
-          locked: true,
-          currentTeam: "Team A",
-        });
-      }
-    });
+  const unsub = onSnapshot(ref, async (snap) => {
+    if (snap.exists()) {
+      const data = snap.data();
 
-    return () => unsub();
-  }, []);
+      setBoardData(data.board || createBoard());
+
+      /* AUTOMATIC STAFF MERGE FIX */
+      const savedStaff = data.staff || {};
+
+      setStaff({
+        supervisors: [
+          ...new Set([
+            ...(savedStaff.supervisors || []),
+            ...defaultStaff.supervisors,
+          ]),
+        ],
+
+        coordinators: [
+          ...new Set([
+            ...(savedStaff.coordinators || []),
+            ...defaultStaff.coordinators,
+          ]),
+        ],
+
+        "Team A": [
+          ...new Set([
+            ...(savedStaff["Team A"] || []),
+            ...defaultStaff["Team A"],
+          ]),
+        ],
+
+        "Team B": [
+          ...new Set([
+            ...(savedStaff["Team B"] || []),
+            ...defaultStaff["Team B"],
+          ]),
+        ],
+      });
+
+      setLocked(data.locked ?? true);
+      setTeam(data.currentTeam || "Team A");
+    } else {
+      await setDoc(ref, {
+        board: createBoard(),
+        staff: defaultStaff,
+        locked: true,
+        currentTeam: "Team A",
+      });
+    }
+  });
+
+  return () => unsub();
+}, []);
 
   async function saveShared(
     nextBoard = boardData,

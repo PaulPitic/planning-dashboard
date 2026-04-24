@@ -429,9 +429,21 @@ export default function App() {
           }}>
             {/* MAIN */}
             <div>
-              <div style={{ fontSize: 10, color: "#94a3b8", marginBottom: 4 }}>
-                Main
-              </div>
+             <div
+  style={{
+    fontSize: 11,
+    fontWeight: "bold",
+    color: "#ffffff",
+    background: "#334155",
+    padding: "4px 6px",
+    borderRadius: 6,
+    marginBottom: 4,
+    textAlign: "center",
+    letterSpacing: 0.3,
+  }}
+>
+  Main
+</div>
 
               {values.map((val, i) => (
                 <select
@@ -458,9 +470,21 @@ export default function App() {
 
             {/* BREAK COVER */}
             <div>
-              <div style={{ fontSize: 10, color: "#94a3b8", marginBottom: 4 }}>
-                Break Cover
-              </div>
+              <div
+  style={{
+    fontSize: 11,
+    fontWeight: "bold",
+    color: "#ffffff",
+    background: "#475569",
+    padding: "4px 6px",
+    borderRadius: 6,
+    marginBottom: 4,
+    textAlign: "center",
+    letterSpacing: 0.3,
+  }}
+>
+  Break Cover
+</div>
 
               {cover.map((val, i) => (
                 <select
@@ -636,9 +660,21 @@ export default function App() {
         }}>
           {/* PICKING */}
           <div style={cardStyle("#16a34a")}>
-            <div style={{ fontSize: 12, fontWeight: "bold", marginBottom: 6 }}>
-              Picking Operations
-            </div>
+           <div
+  style={{
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#ffffff",
+    background: "#166534",
+    padding: "5px 8px",
+    borderRadius: 6,
+    marginBottom: 6,
+    textAlign: "center",
+    letterSpacing: 0.4,
+  }}
+>
+  Picking Operations
+</div>
 
             <div style={{
               display: "grid",

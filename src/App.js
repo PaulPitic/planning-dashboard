@@ -27,22 +27,15 @@ const buttonStyle = {
   color: "#fff",
   fontWeight: 700,
   cursor: "pointer",
+  background: "#2563eb",
 };
 
-const Card = ({ children, color }) => (
-  <div
-    style={{
-      background: "#0f172a",
-      color: "#fff",
-      borderLeft: `8px solid ${color}`,
-      borderRadius: 14,
-      padding: 12,
-      boxShadow: "0 6px 16px rgba(0,0,0,.35)",
-    }}
-  >
-    {children}
-  </div>
-);
+const cardStyle = (color) => ({
+  background: "#1e293b",
+  borderLeft: `8px solid ${color}`,
+  borderRadius: 14,
+  padding: 12,
+});
 
 /* =====================================================
    STRUCTURE
@@ -50,10 +43,10 @@ const Card = ({ children, color }) => (
 const teams = ["Team A", "Team B"];
 
 const leadershipPositions = [
-  "Supervisor 1 (BHV)",
-  "Supervisor 2 (BHV)",
-  "Area Coordinator 1 (BHV)",
-  "Area Coordinator 2 (BHV)",
+  "Supervisor 1",
+  "Supervisor 2",
+  "Coordinator 1",
+  "Coordinator 2",
 ];
 
 const areas = [
@@ -61,47 +54,45 @@ const areas = [
     name: "RT / Hopt",
     color: "#22c55e",
     positions: [
-      "RT Driver 1",
-      "RT Driver 2",
-      "RT Driver 3",
-      "RT Driver 4",
-      "Hopt",
+      { name: "RT Driver A", slots: 3 },
+      { name: "RT Driver B", slots: 3 },
+      { name: "Hopt", slots: 2 },
     ],
   },
   {
-    name: "Prep / Packsize",
+    name: "Prep",
     color: "#3b82f6",
-    positions: ["Trolley Preper 1", "Trolley Preper 2", "Packsize"],
+    positions: [
+      { name: "Trolley Prepper", slots: 2 },
+      { name: "Packsize", slots: 1 },
+    ],
   },
   {
-    name: "Docs / Palletising",
+    name: "Docs / Pallet",
     color: "#f97316",
     positions: [
-      "Document Applier 1",
-      "Document Applier 2",
-      "Palletiser 1",
-      "Palletiser 2",
-      "Palletiser 3",
-      "Palletiser 4",
-      "Trolley Dropper",
-      "Box Filler",
+      { name: "Document Applier", slots: 2 },
+      { name: "Palletiser A", slots: 3 },
+      { name: "Palletiser B", slots: 3 },
+      { name: "Trolley Dropper", slots: 1 },
+      { name: "Box Filler", slots: 1 },
     ],
   },
   {
     name: "VAS / Nester",
     color: "#a855f7",
     positions: [
-      "Vas 1",
-      "Vas 2",
-      "Nester 1",
-      "Nester 2",
-      "Nester 3",
+      { name: "VAS", slots: 2 },
+      { name: "Nester", slots: 4 },
     ],
   },
   {
     name: "Other",
     color: "#14b8a6",
-    positions: ["Packing 1", "Packing 2", "C-Plein"],
+    positions: [
+      { name: "Packing", slots: 2 },
+      { name: "C-Plein", slots: 2 },
+    ],
   },
 ];
 
@@ -131,30 +122,6 @@ const defaultStaff = {
     "Fesenko Anna",
     "Fouka Eleni",
     "Hamerla Paula",
-    "Iacob Ioana Adriana",
-    "Karolin Adam",
-    "Kaznowska Olivia",
-    "Klaudia Voros",
-    "Kwansungnern Ketwadi",
-    "Kytsak Rostyslav",
-    "Maksymiuk Jacek",
-    "Marcin Szumilas",
-    "Muravia Arsenii",
-    "Oles Katarzyna",
-    "Oliinyk Ruslan",
-    "Palade Mihaela",
-    "Parzyszek Lukasz",
-    "Polehenko Snizhana",
-    "Raluca Tarabacu",
-    "Romanik Mariusz",
-    "Ringma Mario",
-    "Socha Ewelina",
-    "Svistula Oleksii",
-    "Tsioumas Panagiotis",
-    "Varava Sofiia",
-    "Veer v.d Kees",
-    "Vilkhova Alina",
-    "Zan Ewa",
   ],
   "Team B": [
     "Baziuk Karyna",
@@ -165,45 +132,29 @@ const defaultStaff = {
     "Debets Henk",
     "Diaz Soler Arslan",
     "Fanelli Samson",
-    "Firek Piotr",
-    "Gnanasundarm G. Theepan",
-    "Hudema Cristina",
-    "Ivanenko Artem",
-    "Jackiewicz Aleksandra",
-    "Kicosova Zuzana",
-    "Lahodiienko Oleh",
-    "Mazgula Adam",
-    "Natiri Theo",
-    "Orlowski Robert",
-    "Prifti Ervis",
-    "Radus Alexandru",
-    "Rapan Adrian",
-    "Rodrigues Joao",
-    "Shavb Yelyzaveta",
-    "Siekierko Samanta",
-    "Slavkovsky Martin (trainer)",
-    "Socol Emmanuel",
-    "Stipinas Aurimas",
-    "Stryzh Anastasia",
-    "Szabo Ibolya",
-    "Ursaciuc Daniel",
-    "Vysockaja Valentina",
-    "Wasilewski Jacek",
   ],
 };
 
 /* =====================================================
-   EMPTY BOARD
+   EMPTY DATA
 ===================================================== */
 function createEmptyData() {
   const obj = {};
+
   teams.forEach((team) => {
     obj[team] = {};
-    leadershipPositions.forEach((p) => (obj[team][p] = ""));
-    areas.forEach((area) =>
-      area.positions.forEach((p) => (obj[team][p] = ""))
-    );
+
+    leadershipPositions.forEach((p) => {
+      obj[team][p] = "";
+    });
+
+    areas.forEach((area) => {
+      area.positions.forEach((p) => {
+        obj[team][p.name] = Array(p.slots).fill("");
+      });
+    });
   });
+
   return obj;
 }
 
@@ -216,18 +167,15 @@ export default function App() {
 
   const [boardData, setBoardData] = useState(createEmptyData());
   const [staff, setStaff] = useState(defaultStaff);
-  const [locked, setLocked] = useState(true);
+
   const [team, setTeam] = useState("Team A");
+  const [locked, setLocked] = useState(true);
 
   const [showUnlock, setShowUnlock] = useState(false);
   const [unlockPass, setUnlockPass] = useState("");
 
-  const [showStaff, setShowStaff] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [category, setCategory] = useState("Team A");
-
   /* =====================================================
-     LIVE SYNC
+     FIREBASE SYNC
   ===================================================== */
   useEffect(() => {
     const ref = doc(db, "dashboard", "shared");
@@ -238,11 +186,7 @@ export default function App() {
 
         setBoardData(data.board || createEmptyData());
         setStaff(data.staff || defaultStaff);
-        setLocked(
-          typeof data.locked === "boolean"
-            ? data.locked
-            : true
-        );
+        setLocked(data.locked ?? true);
         setTeam(data.currentTeam || "Team A");
       } else {
         setDoc(ref, {
@@ -257,6 +201,20 @@ export default function App() {
     return () => unsub();
   }, []);
 
+  const saveShared = async (
+    nextBoard = boardData,
+    nextStaff = staff,
+    nextLocked = locked,
+    nextTeam = team
+  ) => {
+    await setDoc(doc(db, "dashboard", "shared"), {
+      board: nextBoard,
+      staff: nextStaff,
+      locked: nextLocked,
+      currentTeam: nextTeam,
+    });
+  };
+
   /* =====================================================
      LOGIN
   ===================================================== */
@@ -264,7 +222,7 @@ export default function App() {
     return (
       <div style={{
         minHeight:"100vh",
-        background:"#020617",
+        background:"#0f172a",
         color:"#fff",
         display:"flex",
         justifyContent:"center",
@@ -282,7 +240,7 @@ export default function App() {
         />
 
         <button
-          style={{...buttonStyle, background:"#2563eb"}}
+          style={buttonStyle}
           onClick={()=>{
             if(pass===PASSWORD){
               localStorage.setItem("auth","true");
@@ -296,93 +254,106 @@ export default function App() {
     );
   }
 
-  const teamData = boardData[team] || {};
+  const teamData = boardData[team];
 
-  const saveShared = async (
-    nextBoard = boardData,
-    nextStaff = staff,
-    nextLocked = locked,
-    nextTeam = team
-  ) => {
-    await setDoc(doc(db, "dashboard", "shared"), {
-      board: nextBoard,
-      staff: nextStaff,
-      locked: nextLocked,
-      currentTeam: nextTeam,
-    });
-  };
-
-  const assign = (position, value) => {
+  /* =====================================================
+     ASSIGN SLOT
+  ===================================================== */
+  const assignSlot = (role, slotIndex, value) => {
     if (locked) return;
+
+    const used = [];
+
+    Object.values(teamData).forEach((val) => {
+      if (Array.isArray(val)) {
+        val.forEach((x) => x && used.push(x));
+      } else if (val) {
+        used.push(val);
+      }
+    });
+
+    const currentVal = teamData[role][slotIndex];
+    const filteredUsed = used.filter((u) => u !== currentVal);
+
+    if (value && filteredUsed.includes(value)) return;
+
+    const updatedSlots = [...teamData[role]];
+    updatedSlots[slotIndex] = value;
 
     const updated = {
       ...boardData,
       [team]: {
         ...boardData[team],
-        [position]: value,
+        [role]: updatedSlots,
       },
     };
 
     setBoardData(updated);
   };
 
-  const addName = () => {
-    if (!newName.trim()) return;
+  /* =====================================================
+     UNASSIGNED
+  ===================================================== */
+  const assigned = [];
 
-    setStaff({
-      ...staff,
-      [category]: [...staff[category], newName.trim()],
-    });
+  Object.values(teamData).forEach((val) => {
+    if (Array.isArray(val)) {
+      val.forEach((x) => x && assigned.push(x));
+    } else if (val) {
+      assigned.push(val);
+    }
+  });
 
-    setNewName("");
-  };
-
-  const removeName = (cat, name) => {
-    setStaff({
-      ...staff,
-      [cat]: staff[cat].filter((n) => n !== name),
-    });
-  };
-
-  const assigned = Object.values(teamData).filter(Boolean);
   const free = staff[team].filter((n) => !assigned.includes(n));
 
+  /* =====================================================
+     RENDER AREA
+  ===================================================== */
   const renderArea = (area) => (
-    <div key={area.name} style={{marginBottom:18}}>
-      <h3 style={{color:area.color}}>{area.name}</h3>
+    <div key={area.name} style={{ marginBottom: 16 }}>
+      <h3 style={{ color: area.color }}>{area.name}</h3>
 
       <div style={{
         display:"grid",
         gap:10,
         gridTemplateColumns:isMobile()
-          ? "repeat(2,1fr)"
-          : "repeat(5,1fr)"
+          ? "repeat(1,1fr)"
+          : "repeat(2,1fr)"
       }}>
-        {area.positions.map((pos)=>(
-          <Card key={pos} color={area.color}>
-            <div style={{fontWeight:700, marginBottom:8}}>
-              {pos}
+        {area.positions.map((pos) => (
+          <div key={pos.name} style={cardStyle(area.color)}>
+            <div style={{
+              fontWeight:"bold",
+              fontSize:20,
+              marginBottom:8
+            }}>
+              {pos.name}
             </div>
 
-            <select
-              disabled={locked}
-              value={teamData[pos] || ""}
-              onChange={(e)=>assign(pos,e.target.value)}
-              style={{
-                width:"100%",
-                padding:8,
-                background:"#1e293b",
-                color:"#fff",
-                borderRadius:8
-              }}
-            >
-              <option value="">Select</option>
+            {teamData[pos.name].map((slot, idx) => (
+              <select
+                key={idx}
+                disabled={locked}
+                value={slot}
+                onChange={(e)=>
+                  assignSlot(pos.name, idx, e.target.value)
+                }
+                style={{
+                  width:"100%",
+                  padding:10,
+                  marginBottom:8,
+                  borderRadius:8,
+                  fontSize:16
+                }}
+              >
+                <option value="">Slot {idx + 1}</option>
 
-              {staff[team].map((n)=>(
-                <option key={n}>{n}</option>
-              ))}
-            </select>
-          </Card>
+                {staff[team].map((name) => (
+                  <option key={name}>{name}</option>
+                ))}
+              </select>
+            ))}
+          </div>
         ))}
       </div>
     </div>
@@ -391,7 +362,7 @@ export default function App() {
   return (
     <div style={{
       minHeight:"100vh",
-      background:"#020617",
+      background:"#0f172a",
       color:"#fff",
       padding:16
     }}>
@@ -407,13 +378,13 @@ export default function App() {
         {teams.map((t)=>(
           <button
             key={t}
+            style={{
+              ...buttonStyle,
+              background:team===t ? "#2563eb" : "#334155"
+            }}
             onClick={async ()=>{
               setTeam(t);
               await saveShared(boardData, staff, locked, t);
-            }}
-            style={{
-              ...buttonStyle,
-              background:team===t ? "#2563eb" : "#1e293b"
             }}
           >
             {t}
@@ -421,6 +392,10 @@ export default function App() {
         ))}
 
         <button
+          style={{
+            ...buttonStyle,
+            background:locked ? "#dc2626" : "#16a34a"
+          }}
           onClick={async ()=>{
             if(locked){
               setShowUnlock(true);
@@ -429,40 +404,29 @@ export default function App() {
               await saveShared(boardData, staff, true, team);
             }
           }}
-          style={{
-            ...buttonStyle,
-            background:locked ? "#dc2626" : "#16a34a"
-          }}
         >
           {locked ? "🔒 Locked" : "🔓 Unlocked"}
         </button>
 
         <button
-          onClick={()=>saveShared()}
           style={{...buttonStyle, background:"#22c55e"}}
+          onClick={()=>saveShared()}
         >
           ✅ Apply
         </button>
 
         <button
-          onClick={()=>setShowStaff(true)}
-          style={{...buttonStyle, background:"#7c3aed"}}
-        >
-          ⚙️ Manage Staff
-        </button>
-
-        <button
+          style={{...buttonStyle, background:"#475569"}}
           onClick={()=>{
             localStorage.removeItem("auth");
             setAuth(false);
           }}
-          style={{...buttonStyle, background:"#475569"}}
         >
           Logout
         </button>
       </div>
 
-      {/* Unlock popup */}
+      {/* Unlock Popup */}
       {showUnlock && (
         <div style={{
           position:"fixed",
@@ -470,17 +434,14 @@ export default function App() {
           background:"rgba(0,0,0,.7)",
           display:"flex",
           justifyContent:"center",
-          alignItems:"center",
-          zIndex:999
+          alignItems:"center"
         }}>
           <div style={{
-            background:"#111827",
+            background:"#1e293b",
             padding:20,
-            borderRadius:14,
-            width:"90%",
-            maxWidth:380
+            borderRadius:14
           }}>
-            <h2>🔐 Unlock Dashboard</h2>
+            <h2>Unlock Dashboard</h2>
 
             <input
               type="password"
@@ -489,139 +450,24 @@ export default function App() {
               style={{
                 width:"100%",
                 padding:10,
-                borderRadius:8,
-                marginBottom:12
+                marginBottom:10,
+                borderRadius:8
               }}
             />
 
-            <div style={{display:"flex", gap:8}}>
-              <button
-                style={{...buttonStyle, background:"#16a34a"}}
-                onClick={async ()=>{
-                  if(unlockPass===PASSWORD){
-                    setLocked(false);
-                    setShowUnlock(false);
-                    setUnlockPass("");
-                    await saveShared(boardData, staff, false, team);
-                  }
-                }}
-              >
-                Unlock
-              </button>
-
-              <button
-                style={{...buttonStyle, background:"#475569"}}
-                onClick={()=>{
+            <button
+              style={buttonStyle}
+              onClick={async ()=>{
+                if(unlockPass===PASSWORD){
+                  setLocked(false);
                   setShowUnlock(false);
                   setUnlockPass("");
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Staff popup */}
-      {showStaff && (
-        <div style={{
-          position:"fixed",
-          inset:0,
-          background:"rgba(0,0,0,.7)",
-          display:"flex",
-          justifyContent:"center",
-          alignItems:"center",
-          zIndex:999
-        }}>
-          <div style={{
-            background:"#111827",
-            padding:20,
-            width:"95%",
-            maxWidth:520,
-            borderRadius:14
-          }}>
-            <h2>⚙️ Staff Manager</h2>
-
-            <select
-              value={category}
-              onChange={(e)=>setCategory(e.target.value)}
-              style={{
-                width:"100%",
-                padding:8,
-                marginBottom:10,
-                background:"#1e293b",
-                color:"#fff"
+                  await saveShared(boardData, staff, false, team);
+                }
               }}
             >
-              <option>Team A</option>
-              <option>Team B</option>
-              <option>supervisors</option>
-              <option>coordinators</option>
-            </select>
-
-            <div style={{display:"flex", gap:8, marginBottom:12}}>
-              <input
-                placeholder="New Name"
-                value={newName}
-                onChange={(e)=>setNewName(e.target.value)}
-                style={{flex:1,padding:8,borderRadius:8}}
-              />
-
-              <button
-                onClick={addName}
-                style={{...buttonStyle, background:"#16a34a"}}
-              >
-                ➕ Add
-              </button>
-            </div>
-
-            <div style={{
-              maxHeight:320,
-              overflowY:"auto",
-              marginBottom:14
-            }}>
-              {staff[category].map((n)=>(
-                <div
-                  key={n}
-                  style={{
-                    display:"flex",
-                    justifyContent:"space-between",
-                    padding:"6px 0",
-                    borderBottom:"1px solid #374151"
-                  }}
-                >
-                  <span>{n}</span>
-
-                  <button
-                    onClick={()=>removeName(category,n)}
-                    style={{
-                      ...buttonStyle,
-                      background:"#dc2626",
-                      padding:"6px 10px"
-                    }}
-                  >
-                    🗑
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            <div style={{display:"flex", gap:8}}>
-              <button
-                onClick={async ()=>await saveShared(boardData, staff, locked, team)}
-                style={{...buttonStyle, background:"#22c55e"}}
-              >
-                💾 Save Staff
-              </button>
-
-              <button
-                onClick={()=>setShowStaff(false)}
-                style={{...buttonStyle, background:"#475569"}}
-              >
-                Close
-              </button>
-            </div>
+              Unlock
+            </button>
           </div>
         </div>
       )}
@@ -629,27 +475,34 @@ export default function App() {
       {/* Leadership */}
       <div style={{
         display:"grid",
-        gap:10,
-        marginBottom:20,
         gridTemplateColumns:isMobile()
           ? "repeat(2,1fr)"
-          : "repeat(4,1fr)"
+          : "repeat(4,1fr)",
+        gap:10,
+        marginBottom:20
       }}>
         {leadershipPositions.map((pos)=>(
-          <Card key={pos} color="#facc15">
-            <div style={{fontWeight:700, marginBottom:8}}>
+          <div key={pos} style={cardStyle("#facc15")}>
+            <div style={{fontWeight:"bold", marginBottom:8}}>
               {pos}
             </div>
 
             <select
               disabled={locked}
-              value={teamData[pos] || ""}
-              onChange={(e)=>assign(pos,e.target.value)}
+              value={teamData[pos]}
+              onChange={(e)=>{
+                const updated = {
+                  ...boardData,
+                  [team]: {
+                    ...boardData[team],
+                    [pos]: e.target.value,
+                  },
+                };
+                setBoardData(updated);
+              }}
               style={{
                 width:"100%",
-                padding:8,
-                background:"#1e293b",
-                color:"#fff",
+                padding:10,
                 borderRadius:8
               }}
             >
@@ -658,15 +511,15 @@ export default function App() {
               {(pos.includes("Supervisor")
                 ? staff.supervisors
                 : staff.coordinators
-              ).map((n)=>(
-                <option key={n}>{n}</option>
+              ).map((name)=>(
+                <option key={name}>{name}</option>
               ))}
             </select>
-          </Card>
+          </div>
         ))}
       </div>
 
-      {/* Operations */}
+      {/* Areas */}
       {areas.map(renderArea)}
 
       {/* Picking */}

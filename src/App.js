@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
@@ -27,7 +28,6 @@ const buttonStyle = {
   color: "#fff",
   fontWeight: 700,
   cursor: "pointer",
-  background: "#2563eb",
 };
 
 const cardStyle = (color) => ({
@@ -136,26 +136,47 @@ const defaultStaff = {
 };
 
 /* =====================================================
-   EMPTY DATA
+   HELPERS
 ===================================================== */
-function createEmptyData() {
-  const obj = {};
+function getSlots(role) {
+  for (const area of areas) {
+    for (const pos of area.positions) {
+      if (pos.name === role) return pos.slots;
+    }
+  }
+  return 1;
+}
+
+function migrateBoard(raw) {
+  const clean = {};
 
   teams.forEach((team) => {
-    obj[team] = {};
+    clean[team] = {};
 
     leadershipPositions.forEach((p) => {
-      obj[team][p] = "";
+      clean[team][p] = raw?.[team]?.[p] || "";
     });
 
     areas.forEach((area) => {
-      area.positions.forEach((p) => {
-        obj[team][p.name] = Array(p.slots).fill("");
+      area.positions.forEach((pos) => {
+        const val = raw?.[team]?.[pos.name];
+
+        if (Array.isArray(val)) {
+          const arr = [...val];
+          while (arr.length < pos.slots) arr.push("");
+          clean[team][pos.name] = arr.slice(0, pos.slots);
+        } else if (typeof val === "string" && val) {
+          const arr = Array(pos.slots).fill("");
+          arr[0] = val;
+          clean[team][pos.name] = arr;
+        } else {
+          clean[team][pos.name] = Array(pos.slots).fill("");
+        }
       });
     });
   });
 
-  return obj;
+  return clean;
 }
 
 /* =====================================================
@@ -165,7 +186,7 @@ export default function App() {
   const [auth, setAuth] = useState(localStorage.getItem("auth") === "true");
   const [pass, setPass] = useState("");
 
-  const [boardData, setBoardData] = useState(createEmptyData());
+  const [boardData, setBoardData] = useState(migrateBoard({}));
   const [staff, setStaff] = useState(defaultStaff);
 
   const [team, setTeam] = useState("Team A");
@@ -180,17 +201,25 @@ export default function App() {
   useEffect(() => {
     const ref = doc(db, "dashboard", "shared");
 
-    const unsub = onSnapshot(ref, (snap) => {
+    const unsub = onSnapshot(ref, async (snap) => {
       if (snap.exists()) {
         const data = snap.data();
 
-        setBoardData(data.board || createEmptyData());
+        const migrated = migrateBoard(data.board || {});
+        setBoardData(migrated);
         setStaff(data.staff || defaultStaff);
         setLocked(data.locked ?? true);
         setTeam(data.currentTeam || "Team A");
+
+        await setDoc(ref, {
+          board: migrated,
+          staff: data.staff || defaultStaff,
+          locked: data.locked ?? true,
+          currentTeam: data.currentTeam || "Team A",
+        });
       } else {
-        setDoc(ref, {
-          board: createEmptyData(),
+        await setDoc(ref, {
+          board: migrateBoard({}),
           staff: defaultStaff,
           locked: true,
           currentTeam: "Team A",
@@ -220,30 +249,32 @@ export default function App() {
   ===================================================== */
   if (!auth) {
     return (
-      <div style={{
-        minHeight:"100vh",
-        background:"#0f172a",
-        color:"#fff",
-        display:"flex",
-        justifyContent:"center",
-        alignItems:"center",
-        flexDirection:"column",
-        gap:12
-      }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#0f172a",
+          color: "#fff",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          gap: 12,
+        }}
+      >
         <h2>🔐 Dashboard Login</h2>
 
         <input
           type="password"
           value={pass}
-          onChange={(e)=>setPass(e.target.value)}
-          style={{padding:10,borderRadius:8}}
+          onChange={(e) => setPass(e.target.value)}
+          style={{ padding: 10, borderRadius: 8 }}
         />
 
         <button
-          style={buttonStyle}
-          onClick={()=>{
-            if(pass===PASSWORD){
-              localStorage.setItem("auth","true");
+          style={{ ...buttonStyle, background: "#2563eb" }}
+          onClick={() => {
+            if (pass === PASSWORD) {
+              localStorage.setItem("auth", "true");
               setAuth(true);
             }
           }}
@@ -272,12 +303,16 @@ export default function App() {
       }
     });
 
-    const currentVal = teamData[role][slotIndex];
+    const safeSlots = Array.isArray(teamData[role])
+      ? teamData[role]
+      : Array(getSlots(role)).fill("");
+
+    const currentVal = safeSlots[slotIndex];
     const filteredUsed = used.filter((u) => u !== currentVal);
 
     if (value && filteredUsed.includes(value)) return;
 
-    const updatedSlots = [...teamData[role]];
+    const updatedSlots = [...safeSlots];
     updatedSlots[slotIndex] = value;
 
     const updated = {
@@ -313,76 +348,90 @@ export default function App() {
     <div key={area.name} style={{ marginBottom: 16 }}>
       <h3 style={{ color: area.color }}>{area.name}</h3>
 
-      <div style={{
-        display:"grid",
-        gap:10,
-        gridTemplateColumns:isMobile()
-          ? "repeat(1,1fr)"
-          : "repeat(2,1fr)"
-      }}>
-        {area.positions.map((pos) => (
-          <div key={pos.name} style={cardStyle(area.color)}>
-            <div style={{
-              fontWeight:"bold",
-              fontSize:20,
-              marginBottom:8
-            }}>
-              {pos.name}
-            </div>
+      <div
+        style={{
+          display: "grid",
+          gap: 10,
+          gridTemplateColumns: isMobile()
+            ? "repeat(1,1fr)"
+            : "repeat(2,1fr)",
+        }}
+      >
+        {area.positions.map((pos) => {
+          const slots = Array.isArray(teamData[pos.name])
+            ? teamData[pos.name]
+            : Array(pos.slots).fill("");
 
-            {teamData[pos.name].map((slot, idx) => (
-              <select
-                key={idx}
-                disabled={locked}
-                value={slot}
-                onChange={(e)=>
-                  assignSlot(pos.name, idx, e.target.value)
-                }
+          return (
+            <div key={pos.name} style={cardStyle(area.color)}>
+              <div
                 style={{
-                  width:"100%",
-                  padding:10,
-                  marginBottom:8,
-                  borderRadius:8,
-                  fontSize:16
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  marginBottom: 8,
                 }}
               >
-                <option value="">Slot {idx + 1}</option>
+                {pos.name}
+              </div>
 
-                {staff[team].map((name) => (
-                  <option key={name}>{name}</option>
-                ))}
-              </select>
-            ))}
-          </div>
-        ))}
+              {slots.map((slot, idx) => (
+                <select
+                  key={idx}
+                  disabled={locked}
+                  value={slot}
+                  onChange={(e) =>
+                    assignSlot(pos.name, idx, e.target.value)
+                  }
+                  style={{
+                    width: "100%",
+                    padding: 10,
+                    marginBottom: 8,
+                    borderRadius: 8,
+                    fontSize: 16,
+                  }}
+                >
+                  <option value="">Slot {idx + 1}</option>
+
+                  {staff[team].map((name) => (
+                    <option key={name}>{name}</option>
+                  ))}
+                </select>
+              ))}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 
   return (
-    <div style={{
-      minHeight:"100vh",
-      background:"#0f172a",
-      color:"#fff",
-      padding:16
-    }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#0f172a",
+        color: "#fff",
+        padding: 16,
+      }}
+    >
       <h1>📺 Planning Dashboard</h1>
 
       {/* TOP BAR */}
-      <div style={{
-        display:"flex",
-        gap:10,
-        flexWrap:"wrap",
-        marginBottom:20
-      }}>
-        {teams.map((t)=>(
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+          flexWrap: "wrap",
+          marginBottom: 20,
+        }}
+      >
+        {teams.map((t) => (
           <button
             key={t}
             style={{
               ...buttonStyle,
-              background:team===t ? "#2563eb" : "#334155"
+              background: team === t ? "#2563eb" : "#334155",
             }}
-            onClick={async ()=>{
+            onClick={async () => {
               setTeam(t);
               await saveShared(boardData, staff, locked, t);
             }}
@@ -394,10 +443,10 @@ export default function App() {
         <button
           style={{
             ...buttonStyle,
-            background:locked ? "#dc2626" : "#16a34a"
+            background: locked ? "#dc2626" : "#16a34a",
           }}
-          onClick={async ()=>{
-            if(locked){
+          onClick={async () => {
+            if (locked) {
               setShowUnlock(true);
             } else {
               setLocked(true);
@@ -409,15 +458,15 @@ export default function App() {
         </button>
 
         <button
-          style={{...buttonStyle, background:"#22c55e"}}
-          onClick={()=>saveShared()}
+          style={{ ...buttonStyle, background: "#22c55e" }}
+          onClick={() => saveShared()}
         >
           ✅ Apply
         </button>
 
         <button
-          style={{...buttonStyle, background:"#475569"}}
-          onClick={()=>{
+          style={{ ...buttonStyle, background: "#475569" }}
+          onClick={() => {
             localStorage.removeItem("auth");
             setAuth(false);
           }}
@@ -428,37 +477,41 @@ export default function App() {
 
       {/* Unlock Popup */}
       {showUnlock && (
-        <div style={{
-          position:"fixed",
-          inset:0,
-          background:"rgba(0,0,0,.7)",
-          display:"flex",
-          justifyContent:"center",
-          alignItems:"center"
-        }}>
-          <div style={{
-            background:"#1e293b",
-            padding:20,
-            borderRadius:14
-          }}>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,.7)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              background: "#1e293b",
+              padding: 20,
+              borderRadius: 14,
+            }}
+          >
             <h2>Unlock Dashboard</h2>
 
             <input
               type="password"
               value={unlockPass}
-              onChange={(e)=>setUnlockPass(e.target.value)}
+              onChange={(e) => setUnlockPass(e.target.value)}
               style={{
-                width:"100%",
-                padding:10,
-                marginBottom:10,
-                borderRadius:8
+                width: "100%",
+                padding: 10,
+                marginBottom: 10,
+                borderRadius: 8,
               }}
             />
 
             <button
-              style={buttonStyle}
-              onClick={async ()=>{
-                if(unlockPass===PASSWORD){
+              style={{ ...buttonStyle, background: "#2563eb" }}
+              onClick={async () => {
+                if (unlockPass === PASSWORD) {
                   setLocked(false);
                   setShowUnlock(false);
                   setUnlockPass("");
@@ -473,24 +526,26 @@ export default function App() {
       )}
 
       {/* Leadership */}
-      <div style={{
-        display:"grid",
-        gridTemplateColumns:isMobile()
-          ? "repeat(2,1fr)"
-          : "repeat(4,1fr)",
-        gap:10,
-        marginBottom:20
-      }}>
-        {leadershipPositions.map((pos)=>(
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: isMobile()
+            ? "repeat(2,1fr)"
+            : "repeat(4,1fr)",
+          gap: 10,
+          marginBottom: 20,
+        }}
+      >
+        {leadershipPositions.map((pos) => (
           <div key={pos} style={cardStyle("#facc15")}>
-            <div style={{fontWeight:"bold", marginBottom:8}}>
+            <div style={{ fontWeight: "bold", marginBottom: 8 }}>
               {pos}
             </div>
 
             <select
               disabled={locked}
               value={teamData[pos]}
-              onChange={(e)=>{
+              onChange={(e) => {
                 const updated = {
                   ...boardData,
                   [team]: {
@@ -498,12 +553,13 @@ export default function App() {
                     [pos]: e.target.value,
                   },
                 };
+
                 setBoardData(updated);
               }}
               style={{
-                width:"100%",
-                padding:10,
-                borderRadius:8
+                width: "100%",
+                padding: 10,
+                borderRadius: 8,
               }}
             >
               <option value="">Select</option>
@@ -511,7 +567,7 @@ export default function App() {
               {(pos.includes("Supervisor")
                 ? staff.supervisors
                 : staff.coordinators
-              ).map((name)=>(
+              ).map((name) => (
                 <option key={name}>{name}</option>
               ))}
             </select>
@@ -523,7 +579,7 @@ export default function App() {
       {areas.map(renderArea)}
 
       {/* Picking */}
-      <h2 style={{color:"#4ade80"}}>
+      <h2 style={{ color: "#4ade80" }}>
         📦 Picking ({free.length})
       </h2>
 

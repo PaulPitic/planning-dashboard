@@ -36,6 +36,22 @@ export default function App() {
 
   const operators = staff[team];
 
+  /* =====================================================
+     TEMP MAIN ASSIGNED EXAMPLE
+     Replace later with your real assigned state arrays
+  ===================================================== */
+  const assignedMain = [
+    operators[0],
+    operators[1],
+    operators[2],
+    operators[3],
+    operators[4],
+  ];
+
+  const pickingOperators = operators.filter(
+    (name) => !assignedMain.includes(name)
+  );
+
   return (
     <div
       style={{
@@ -56,47 +72,91 @@ export default function App() {
         <div style={{ marginTop: 6, marginBottom: 6 }}>
           <button
             style={
-              team === "Team A" ? btnBlue : btn
+              team === "Team A"
+                ? btnBlue
+                : btn
             }
-            onClick={() => setTeam("Team A")}
+            onClick={() =>
+              setTeam("Team A")
+            }
           >
             Team A
           </button>{" "}
           <button
             style={
-              team === "Team B" ? btnBlue : btn
+              team === "Team B"
+                ? btnBlue
+                : btn
             }
-            onClick={() => setTeam("Team B")}
+            onClick={() =>
+              setTeam("Team B")
+            }
           >
             Team B
           </button>{" "}
-          <button style={btnGreen}>Apply</button>{" "}
-          <button style={btnPurple}>Staff</button>
+          <button style={btnGreen}>
+            Apply
+          </button>{" "}
+          <button style={btnPurple}>
+            Staff
+          </button>
         </div>
 
         {/* LEADERSHIP */}
         <Grid cols={4}>
-          <Simple title="Supervisor" slots={3} c="#facc15" />
-          <Simple title="Supervisor" slots={3} c="#facc15" />
-          <Simple title="Coordinator" slots={3} c="#facc15" />
-          <Simple title="Coordinator" slots={3} c="#facc15" />
+          <Simple
+            title="Supervisor"
+            slots={3}
+            c="#facc15"
+          />
+          <Simple
+            title="Supervisor"
+            slots={3}
+            c="#facc15"
+          />
+          <Simple
+            title="Coordinator"
+            slots={3}
+            c="#facc15"
+          />
+          <Simple
+            title="Coordinator"
+            slots={3}
+            c="#facc15"
+          />
         </Grid>
 
         {/* RT */}
-        <Title text="RT / Hopt" c="#22c55e" />
+        <Title
+          text="RT / Hopt"
+          c="#22c55e"
+        />
         <Grid cols={3}>
-          <Simple title="RT Driver" slots={3} c="#22c55e" />
-          <Simple title="RT Driver" slots={3} c="#22c55e" />
-          <Simple title="Hopt" slots={2} c="#22c55e" />
+          <Simple
+            title="RT Driver"
+            slots={3}
+            c="#22c55e"
+          />
+          <Simple
+            title="RT Driver"
+            slots={3}
+            c="#22c55e"
+          />
+          <Simple
+            title="Hopt"
+            slots={2}
+            c="#22c55e"
+          />
         </Grid>
 
         {/* PREP */}
-        <Title text="Prep" c="#3b82f6" />
+        <Title
+          text="Prep"
+          c="#3b82f6"
+        />
         <Grid cols={3}>
           <Split
             title="Trolley Prepper"
-            mainTitle="Main"
-            coverTitle="Break Cover"
             main={2}
             cover={2}
             c="#3b82f6"
@@ -104,8 +164,6 @@ export default function App() {
           />
           <Split
             title="Packsize"
-            mainTitle="Main"
-            coverTitle="Break Cover"
             main={2}
             cover={2}
             c="#3b82f6"
@@ -114,12 +172,13 @@ export default function App() {
         </Grid>
 
         {/* DOCS */}
-        <Title text="Docs / Pallet" c="#f97316" />
+        <Title
+          text="Docs / Pallet"
+          c="#f97316"
+        />
         <Grid cols={3}>
           <Split
             title="Document Applier"
-            mainTitle="Main"
-            coverTitle="Break Cover"
             main={2}
             cover={2}
             c="#f97316"
@@ -127,8 +186,6 @@ export default function App() {
           />
           <Split
             title="Palletiser"
-            mainTitle="Main"
-            coverTitle="Break Cover"
             main={3}
             cover={3}
             c="#f97316"
@@ -136,8 +193,6 @@ export default function App() {
           />
           <Split
             title="Palletiser"
-            mainTitle="Main"
-            coverTitle="Break Cover"
             main={3}
             cover={3}
             c="#f97316"
@@ -145,8 +200,6 @@ export default function App() {
           />
           <Split
             title="Trolley Dropper"
-            mainTitle="Main"
-            coverTitle="Break Cover"
             main={1}
             cover={1}
             c="#f97316"
@@ -154,8 +207,6 @@ export default function App() {
           />
           <Split
             title="Box Filler"
-            mainTitle="Main"
-            coverTitle="Break Cover"
             main={1}
             cover={1}
             c="#f97316"
@@ -164,31 +215,56 @@ export default function App() {
         </Grid>
 
         {/* VAS */}
-        <Title text="VAS / Nester" c="#a855f7" />
+        <Title
+          text="VAS / Nester"
+          c="#a855f7"
+        />
         <Grid cols={3}>
-          <Simple title="VAS" slots={2} c="#a855f7" />
-          <Simple title="Nester" slots={4} c="#a855f7" />
+          <Simple
+            title="VAS"
+            slots={2}
+            c="#a855f7"
+          />
+          <Simple
+            title="Nester"
+            slots={4}
+            c="#a855f7"
+          />
         </Grid>
 
         {/* OTHER */}
-        <Title text="Other" c="#14b8a6" />
+        <Title
+          text="Other"
+          c="#14b8a6"
+        />
         <Grid cols={3}>
-          <Simple title="Packing" slots={2} c="#14b8a6" />
-          <Simple title="C-Plein" slots={2} c="#14b8a6" />
+          <Simple
+            title="Packing"
+            slots={2}
+            c="#14b8a6"
+          />
+          <Simple
+            title="C-Plein"
+            slots={2}
+            c="#14b8a6"
+          />
         </Grid>
 
         {/* BOTTOM */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "2fr 1fr",
+            gridTemplateColumns:
+              "2fr 1fr",
             gap: 8,
             marginTop: 6,
           }}
         >
           {/* PICKING */}
           <div style={box("#16a34a")}>
-            <div style={head}>Picking</div>
+            <div style={head}>
+              Picking Operations
+            </div>
 
             <div
               style={{
@@ -196,27 +272,15 @@ export default function App() {
                 gridTemplateColumns:
                   "repeat(3,1fr)",
                 gap: 4,
+                fontSize: 15,
+                lineHeight: "22px",
               }}
             >
-              {Array.from({ length: 12 }).map(
-                (_, i) => (
-                  <select
-                    key={i}
-                    style={{
-                      ...sel,
-                      fontSize: 13,
-                    }}
-                  >
-                    <option>
-                      Pick {i + 1}
-                    </option>
-
-                    {operators.map((n) => (
-                      <option key={n}>
-                        {n}
-                      </option>
-                    ))}
-                  </select>
+              {pickingOperators.map(
+                (n) => (
+                  <div key={n}>
+                    {n}
+                  </div>
                 )
               )}
             </div>
@@ -224,17 +288,22 @@ export default function App() {
 
           {/* NOT IN */}
           <div style={box("#0ea5e9")}>
-            <div style={head}>Not In</div>
+            <div style={head}>
+              Not In
+            </div>
 
-            {Array.from({ length: 12 }).map(
-              (_, i) => (
-                <select key={i} style={sel}>
-                  <option>
-                    -{i + 1}-
-                  </option>
-                </select>
-              )
-            )}
+            {Array.from({
+              length: 12,
+            }).map((_, i) => (
+              <select
+                key={i}
+                style={sel}
+              >
+                <option>
+                  -{i + 1}-
+                </option>
+              </select>
+            ))}
           </div>
         </div>
       </div>
@@ -246,7 +315,8 @@ export default function App() {
           borderLeft:
             "1px solid #334155",
           display: "flex",
-          justifyContent: "center",
+          justifyContent:
+            "center",
           alignItems: "center",
           color: "#64748b",
           fontSize: 24,
@@ -261,7 +331,10 @@ export default function App() {
 
 /* ===================================================== */
 
-function Grid({ cols, children }) {
+function Grid({
+  cols,
+  children,
+}) {
   return (
     <div
       style={{
@@ -276,12 +349,16 @@ function Grid({ cols, children }) {
   );
 }
 
-function Title({ text, c }) {
+function Title({
+  text,
+  c,
+}) {
   return (
     <div
       style={{
         color: c,
-        fontWeight: "bold",
+        fontWeight:
+          "bold",
         fontSize: 13,
         marginBottom: 4,
       }}
@@ -291,28 +368,35 @@ function Title({ text, c }) {
   );
 }
 
-function Simple({ title, slots, c }) {
+function Simple({
+  title,
+  slots,
+  c,
+}) {
   return (
     <div style={box(c)}>
-      <div style={head}>{title}</div>
+      <div style={head}>
+        {title}
+      </div>
 
-      {Array.from({ length: slots }).map(
-        (_, i) => (
-          <select key={i} style={sel}>
-            <option>
-              -{i + 1}-
-            </option>
-          </select>
-        )
-      )}
+      {Array.from({
+        length: slots,
+      }).map((_, i) => (
+        <select
+          key={i}
+          style={sel}
+        >
+          <option>
+            -{i + 1}-
+          </option>
+        </select>
+      ))}
     </div>
   );
 }
 
 function Split({
   title,
-  mainTitle,
-  coverTitle,
   main,
   cover,
   c,
@@ -320,7 +404,9 @@ function Split({
 }) {
   return (
     <div style={box(c)}>
-      <div style={head}>{title}</div>
+      <div style={head}>
+        {title}
+      </div>
 
       <div
         style={{
@@ -330,45 +416,54 @@ function Split({
           gap: 4,
         }}
       >
+        {/* MAIN */}
         <div>
           <div
             style={{
               fontSize: 10,
+              color:
+                "#94a3b8",
               marginBottom: 4,
-              color: "#94a3b8",
             }}
           >
-            {mainTitle}
+            Main
           </div>
 
-          {Array.from({ length: main }).map(
-            (_, i) => (
-              <select
-                key={i}
-                style={sel}
-              >
-                <option>
-                  -{i + 1}-
-                </option>
-                {names.map((n) => (
-                  <option key={n}>
+          {Array.from({
+            length: main,
+          }).map((_, i) => (
+            <select
+              key={i}
+              style={sel}
+            >
+              <option>
+                -{i + 1}-
+              </option>
+
+              {names.map(
+                (n) => (
+                  <option
+                    key={n}
+                  >
                     {n}
                   </option>
-                ))}
-              </select>
-            )
-          )}
+                )
+              )}
+            </select>
+          ))}
         </div>
 
+        {/* BREAK */}
         <div>
           <div
             style={{
               fontSize: 10,
+              color:
+                "#94a3b8",
               marginBottom: 4,
-              color: "#94a3b8",
             }}
           >
-            {coverTitle}
+            Break Cover
           </div>
 
           {Array.from({
@@ -381,11 +476,16 @@ function Split({
               <option>
                 -{i + 1}-
               </option>
-              {names.map((n) => (
-                <option key={n}>
-                  {n}
-                </option>
-              ))}
+
+              {names.map(
+                (n) => (
+                  <option
+                    key={n}
+                  >
+                    {n}
+                  </option>
+                )
+              )}
             </select>
           ))}
         </div>
@@ -416,25 +516,31 @@ const sel = {
 };
 
 const btn = {
-  padding: "6px 10px",
+  padding:
+    "6px 10px",
   border: "none",
   borderRadius: 8,
-  background: "#334155",
+  background:
+    "#334155",
   color: "white",
-  fontWeight: "bold",
+  fontWeight:
+    "bold",
 };
 
 const btnBlue = {
   ...btn,
-  background: "#2563eb",
+  background:
+    "#2563eb",
 };
 
 const btnGreen = {
   ...btn,
-  background: "#22c55e",
+  background:
+    "#22c55e",
 };
 
 const btnPurple = {
   ...btn,
-  background: "#7c3aed",
+  background:
+    "#7c3aed",
 };

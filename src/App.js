@@ -1,23 +1,10 @@
-/*
-FULL FINAL App.js
-Requested update summary:
-✅ Keep 75 / 25 TV layout
-✅ Break Cover added to marked roles
-✅ Picking list auto-generated
-✅ Not In section (12 slots)
-✅ Team sync
-✅ Firebase sync
-✅ Login / lock / staff manager preserved structure
-
-NOTE:
-This is a FULL ready-paste file.
-*/
-
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
 
-/* ===================================================== */
+/* =====================================================
+   FIREBASE
+===================================================== */
 const firebaseConfig = {
   apiKey: "AIzaSyBF-W5EwRFF0baYzj-jIh8vuCBh3cj9Wn8",
   authDomain: "planning-dashboard-53c9f.firebaseapp.com",
@@ -27,28 +14,45 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+/* =====================================================
+   SETTINGS
+===================================================== */
 const PASSWORD = "1234";
 const teams = ["Team A", "Team B"];
 
-const btn = {
+const btnBase = {
   padding: "6px 10px",
-  borderRadius: 8,
   border: "none",
+  borderRadius: 8,
   color: "#fff",
-  fontWeight: 700,
+  fontWeight: "bold",
   cursor: "pointer",
   fontSize: 12,
 };
 
-const card = (color) => ({
+const selectStyle = {
+  width: "100%",
+  marginBottom: 4,
+  fontSize: 11,
+  padding: 3,
+  borderRadius: 5,
+};
+
+const box = (c) => ({
   background: "#1e293b",
-  borderLeft: `5px solid ${color}`,
+  borderLeft: `5px solid ${c}`,
   borderRadius: 10,
   padding: 8,
 });
 
+const titleStyle = {
+  fontWeight: "bold",
+  fontSize: 12,
+  marginBottom: 4,
+};
+
 /* =====================================================
-STAFF
+   STAFF
 ===================================================== */
 const defaultStaff = {
   supervisors: [
@@ -70,8 +74,9 @@ const defaultStaff = {
     "Chrobak Jaroslaw",
     "Diachenko Maria",
     "Fesenko Anna",
-    "Extra A1",
-    "Extra A2",
+    "Adam Kowalski",
+    "Mario Test",
+    "Lukas TeamA",
   ],
   "Team B": [
     "Baziuk Karyna",
@@ -80,19 +85,20 @@ const defaultStaff = {
     "Chrobak Marta",
     "Cuchillo Lopez Eloi",
     "Debets Henk",
-    "Extra B1",
-    "Extra B2",
+    "Robert TeamB",
+    "Daniel TeamB",
+    "Theo TeamB",
   ],
 };
 
 /* =====================================================
-ROLES
+   STRUCTURE
 ===================================================== */
 const leadership = [
-  { key: "sup1", label: "Supervisor", slots: 3, src: "supervisors" },
-  { key: "sup2", label: "Supervisor", slots: 3, src: "supervisors" },
-  { key: "coord1", label: "Coordinator", slots: 3, src: "coordinators" },
-  { key: "coord2", label: "Coordinator", slots: 3, src: "coordinators" },
+  { key: "sup1", label: "Supervisor", slots: 3, source: "supervisors" },
+  { key: "sup2", label: "Supervisor", slots: 3, source: "supervisors" },
+  { key: "coord1", label: "Coordinator", slots: 3, source: "coordinators" },
+  { key: "coord2", label: "Coordinator", slots: 3, source: "coordinators" },
 ];
 
 const areas = [
@@ -109,19 +115,19 @@ const areas = [
     title: "Prep",
     color: "#3b82f6",
     items: [
-      { key: "prep", label: "Trolley Prepper", slots: 2, breakCover: true },
-      { key: "packsize", label: "Packsize", slots: 2, breakCover: true },
+      { key: "prep", label: "Trolley Prepper", slots: 2, breakCover: 2 },
+      { key: "packsize", label: "Packsize", slots: 2, breakCover: 2 },
     ],
   },
   {
     title: "Docs / Pallet",
     color: "#f97316",
     items: [
-      { key: "doc", label: "Document Applier", slots: 2, breakCover: true },
-      { key: "pal1", label: "Palletiser", slots: 3, breakCover: true },
-      { key: "pal2", label: "Palletiser", slots: 3, breakCover: true },
-      { key: "drop", label: "Trolley Dropper", slots: 1, breakCover: true },
-      { key: "box", label: "Box Filler", slots: 1, breakCover: true },
+      { key: "doc", label: "Document Applier", slots: 2, breakCover: 2 },
+      { key: "pal1", label: "Palletiser", slots: 3, breakCover: 3 },
+      { key: "pal2", label: "Palletiser", slots: 3, breakCover: 3 },
+      { key: "drop", label: "Trolley Dropper", slots: 1, breakCover: 1 },
+      { key: "boxf", label: "Box Filler", slots: 1, breakCover: 1 },
     ],
   },
   {
@@ -142,69 +148,79 @@ const areas = [
   },
 ];
 
-/* ===================================================== */
+/* =====================================================
+   HELPERS
+===================================================== */
+function emptyArr(n) {
+  return Array(n).fill("");
+}
+
 function createBoard() {
-  const b = {};
+  const board = {};
 
   teams.forEach((team) => {
-    b[team] = {};
+    board[team] = {};
 
     leadership.forEach((x) => {
-      b[team][x.key] = Array(x.slots).fill("");
+      board[team][x.key] = emptyArr(x.slots);
     });
 
     areas.forEach((a) => {
       a.items.forEach((x) => {
-        b[team][x.key] = Array(x.slots).fill("");
+        board[team][x.key] = emptyArr(x.slots);
 
-        if (x.breakCover) b[team][x.key + "_bc"] = "";
+        if (x.breakCover) {
+          board[team][x.key + "_bc"] = emptyArr(x.breakCover);
+        }
       });
     });
 
-    b[team]["notin"] = Array(12).fill("");
+    board[team]["notin"] = emptyArr(12);
   });
 
-  return b;
+  return board;
 }
 
-function safe(v, n) {
-  if (Array.isArray(v)) {
-    const c = [...v];
-    while (c.length < n) c.push("");
-    return c.slice(0, n);
+function safeArray(value, len) {
+  if (Array.isArray(value)) {
+    const arr = [...value];
+    while (arr.length < len) arr.push("");
+    return arr.slice(0, len);
   }
-  return Array(n).fill("");
+  return emptyArr(len);
 }
 
-/* ===================================================== */
+/* =====================================================
+   APP
+===================================================== */
 export default function App() {
-  const [auth, setAuth] = useState(
+  const [logged, setLogged] = useState(
     localStorage.getItem("auth") === "true"
   );
-  const [pass, setPass] = useState("");
+  const [loginPass, setLoginPass] = useState("");
 
   const [team, setTeam] = useState("Team A");
   const [locked, setLocked] = useState(true);
 
   const [board, setBoard] = useState(createBoard());
-  const [staff, setStaff] = useState(defaultStaff);
+  const [staff] = useState(defaultStaff);
 
-  /* ===================================================== */
+  /* =====================================================
+     FIREBASE
+  ===================================================== */
   useEffect(() => {
     const ref = doc(db, "dashboard", "shared");
 
     const unsub = onSnapshot(ref, async (snap) => {
       if (snap.exists()) {
-        const d = snap.data();
+        const data = snap.data();
 
-        setBoard(d.board || createBoard());
-        setStaff(d.staff || defaultStaff);
-        setLocked(d.locked ?? true);
-        setTeam(d.currentTeam || "Team A");
+        setBoard(data.board || createBoard());
+        setLocked(data.locked ?? true);
+        setTeam(data.currentTeam || "Team A");
       } else {
         await setDoc(ref, {
           board: createBoard(),
-          staff: defaultStaff,
           locked: true,
           currentTeam: "Team A",
         });
@@ -216,20 +232,20 @@ export default function App() {
 
   async function saveShared(
     nextBoard = board,
-    nextStaff = staff,
     nextLocked = locked,
     nextTeam = team
   ) {
     await setDoc(doc(db, "dashboard", "shared"), {
       board: nextBoard,
-      staff: nextStaff,
       locked: nextLocked,
       currentTeam: nextTeam,
     });
   }
 
-  /* ===================================================== */
-  if (!auth) {
+  /* =====================================================
+     LOGIN
+  ===================================================== */
+  if (!logged) {
     return (
       <div
         style={{
@@ -243,20 +259,21 @@ export default function App() {
           gap: 10,
         }}
       >
-        <h2>Login</h2>
+        <h2>Dashboard Login</h2>
 
         <input
           type="password"
-          value={pass}
-          onChange={(e) => setPass(e.target.value)}
+          value={loginPass}
+          onChange={(e) => setLoginPass(e.target.value)}
+          style={{ padding: 8 }}
         />
 
         <button
-          style={{ ...btn, background: "#2563eb" }}
+          style={{ ...btnBase, background: "#2563eb" }}
           onClick={() => {
-            if (pass === PASSWORD) {
+            if (loginPass === PASSWORD) {
               localStorage.setItem("auth", "true");
-              setAuth(true);
+              setLogged(true);
             }
           }}
         >
@@ -268,13 +285,16 @@ export default function App() {
 
   const teamData = board[team] || {};
   const operators = staff[team] || [];
-  const allNames = [...staff["Team A"], ...staff["Team B"]];
+  const allPeople = [...staff["Team A"], ...staff["Team B"]];
 
-  function assign(key, idx, val, size) {
+  /* =====================================================
+     ASSIGN
+  ===================================================== */
+  function updateField(key, index, value, size) {
     if (locked) return;
 
-    const arr = safe(teamData[key], size);
-    arr[idx] = val;
+    const arr = safeArray(teamData[key], size);
+    arr[index] = value;
 
     const next = {
       ...board,
@@ -287,99 +307,129 @@ export default function App() {
     setBoard(next);
   }
 
-  function assignSingle(key, val) {
-    if (locked) return;
-
-    const next = {
-      ...board,
-      [team]: {
-        ...board[team],
-        [key]: val,
-      },
-    };
-
-    setBoard(next);
-  }
-
   /* =====================================================
-     PICKING LIST
+     USED PEOPLE
   ===================================================== */
-  const mainAssigned = [];
+  const used = [];
 
   Object.keys(teamData).forEach((k) => {
-    const v = teamData[k];
+    const val = teamData[k];
 
-    if (Array.isArray(v)) {
-      v.forEach((x) => x && mainAssigned.push(x));
+    if (Array.isArray(val)) {
+      val.forEach((x) => x && used.push(x));
     }
   });
 
-  const picking = operators.filter(
-    (x) => !mainAssigned.includes(x)
-  );
+  const picking = operators.filter((x) => !used.includes(x));
 
-  /* ===================================================== */
-  function renderRole(item, color) {
-    const vals = safe(teamData[item.key], item.slots);
+  /* =====================================================
+     COMPONENTS
+  ===================================================== */
+  function SplitCard({ item, color }) {
+    const main = safeArray(teamData[item.key], item.slots);
+    const cover = safeArray(
+      teamData[item.key + "_bc"],
+      item.breakCover
+    );
 
     return (
-      <div key={item.key} style={card(color)}>
+      <div style={box(color)}>
+        <div style={titleStyle}>{item.label}</div>
+
         <div
           style={{
-            fontWeight: "bold",
-            fontSize: 12,
-            marginBottom: 4,
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 4,
           }}
         >
-          {item.label}
-        </div>
+          <div>
+            {main.map((v, i) => (
+              <select
+                key={i}
+                value={v}
+                disabled={locked}
+                onChange={(e) =>
+                  updateField(
+                    item.key,
+                    i,
+                    e.target.value,
+                    item.slots
+                  )
+                }
+                style={selectStyle}
+              >
+                <option value="">-{i + 1}-</option>
+                {operators.map((n) => (
+                  <option key={n}>{n}</option>
+                ))}
+              </select>
+            ))}
+          </div>
 
-        {vals.map((v, i) => (
+          <div>
+            {cover.map((v, i) => (
+              <select
+                key={i}
+                value={v}
+                disabled={locked}
+                onChange={(e) =>
+                  updateField(
+                    item.key + "_bc",
+                    i,
+                    e.target.value,
+                    item.breakCover
+                  )
+                }
+                style={selectStyle}
+              >
+                <option value="">Break</option>
+                {operators.map((n) => (
+                  <option key={n}>{n}</option>
+                ))}
+              </select>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function NormalCard({ item, color }) {
+    const arr = safeArray(teamData[item.key], item.slots);
+
+    return (
+      <div style={box(color)}>
+        <div style={titleStyle}>{item.label}</div>
+
+        {arr.map((v, i) => (
           <select
             key={i}
-            disabled={locked}
             value={v}
+            disabled={locked}
             onChange={(e) =>
-              assign(item.key, i, e.target.value, item.slots)
+              updateField(
+                item.key,
+                i,
+                e.target.value,
+                item.slots
+              )
             }
-            style={{
-              width: "100%",
-              marginBottom: 4,
-              fontSize: 11,
-            }}
+            style={selectStyle}
           >
             <option value="">-{i + 1}-</option>
-
             {operators.map((n) => (
               <option key={n}>{n}</option>
             ))}
           </select>
         ))}
-
-        {item.breakCover && (
-          <select
-            disabled={locked}
-            value={teamData[item.key + "_bc"] || ""}
-            onChange={(e) =>
-              assignSingle(item.key + "_bc", e.target.value)
-            }
-            style={{
-              width: "100%",
-              fontSize: 11,
-            }}
-          >
-            <option value="">Break Cover</option>
-
-            {operators.map((n) => (
-              <option key={n}>{n}</option>
-            ))}
-          </select>
-        )}
       </div>
     );
   }
 
-  /* ===================================================== */
+  /* =====================================================
+     MAIN
+  ===================================================== */
   return (
     <div
       style={{
@@ -387,27 +437,21 @@ export default function App() {
         background: "#0f172a",
         color: "#fff",
         display: "flex",
-        overflow: "hidden",
         fontFamily: "Arial",
       }}
     >
       {/* LEFT */}
-      <div
-        style={{
-          width: "75%",
-          padding: 8,
-          overflow: "hidden",
-        }}
-      >
-        <h1 style={{ fontSize: 18, margin: "0 0 6px 0" }}>
+      <div style={{ width: "75%", padding: 8 }}>
+        <h1 style={{ margin: 0, fontSize: 20 }}>
           Planning Dashboard
         </h1>
 
-        {/* TOP */}
+        {/* TOP BAR */}
         <div
           style={{
             display: "flex",
             gap: 6,
+            marginTop: 6,
             marginBottom: 6,
           }}
         >
@@ -415,13 +459,13 @@ export default function App() {
             <button
               key={t}
               style={{
-                ...btn,
+                ...btnBase,
                 background:
                   team === t ? "#2563eb" : "#334155",
               }}
               onClick={async () => {
                 setTeam(t);
-                await saveShared(board, staff, locked, t);
+                await saveShared(board, locked, t);
               }}
             >
               {t}
@@ -430,19 +474,14 @@ export default function App() {
 
           <button
             style={{
-              ...btn,
+              ...btnBase,
               background: locked
                 ? "#dc2626"
                 : "#16a34a",
             }}
             onClick={async () => {
               setLocked(!locked);
-              await saveShared(
-                board,
-                staff,
-                !locked,
-                team
-              );
+              await saveShared(board, !locked, team);
             }}
           >
             {locked ? "🔒" : "🔓"}
@@ -450,7 +489,7 @@ export default function App() {
 
           <button
             style={{
-              ...btn,
+              ...btnBase,
               background: "#22c55e",
             }}
             onClick={() => saveShared()}
@@ -459,7 +498,7 @@ export default function App() {
           </button>
         </div>
 
-        {/* Leadership */}
+        {/* LEADERSHIP */}
         <div
           style={{
             display: "grid",
@@ -469,61 +508,49 @@ export default function App() {
           }}
         >
           {leadership.map((x) => (
-            <div key={x.key} style={card("#facc15")}>
-              <div
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 12,
-                }}
-              >
-                {x.label}
-              </div>
+            <div key={x.key} style={box("#facc15")}>
+              <div style={titleStyle}>{x.label}</div>
 
-              {safe(teamData[x.key], x.slots).map(
-                (v, i) => (
-                  <select
-                    key={i}
-                    disabled={locked}
-                    value={v}
-                    onChange={(e) =>
-                      assign(
-                        x.key,
-                        i,
-                        e.target.value,
-                        x.slots
-                      )
-                    }
-                    style={{
-                      width: "100%",
-                      marginTop: 4,
-                      fontSize: 11,
-                    }}
-                  >
-                    <option value="">
-                      -{i + 1}-
-                    </option>
-
-                    {staff[x.src].map((n) => (
-                      <option key={n}>{n}</option>
-                    ))}
-                  </select>
-                )
-              )}
+              {safeArray(
+                teamData[x.key],
+                x.slots
+              ).map((v, i) => (
+                <select
+                  key={i}
+                  value={v}
+                  disabled={locked}
+                  onChange={(e) =>
+                    updateField(
+                      x.key,
+                      i,
+                      e.target.value,
+                      x.slots
+                    )
+                  }
+                  style={selectStyle}
+                >
+                  <option value="">-{i + 1}-</option>
+                  {staff[x.source].map((n) => (
+                    <option key={n}>{n}</option>
+                  ))}
+                </select>
+              ))}
             </div>
           ))}
         </div>
 
         {/* AREAS */}
-        {areas.map((a) => (
-          <div key={a.title} style={{ marginBottom: 6 }}>
+        {areas.map((area) => (
+          <div key={area.title}>
             <div
               style={{
-                color: a.color,
-                fontSize: 13,
+                color: area.color,
                 fontWeight: "bold",
+                fontSize: 13,
+                marginBottom: 4,
               }}
             >
-              {a.title}
+              {area.title}
             </div>
 
             <div
@@ -531,81 +558,78 @@ export default function App() {
                 display: "grid",
                 gridTemplateColumns: "repeat(3,1fr)",
                 gap: 6,
+                marginBottom: 6,
               }}
             >
-              {a.items.map((x) =>
-                renderRole(x, a.color)
+              {area.items.map((item) =>
+                item.breakCover ? (
+                  <SplitCard
+                    key={item.key}
+                    item={item}
+                    color={area.color}
+                  />
+                ) : (
+                  <NormalCard
+                    key={item.key}
+                    item={item}
+                    color={area.color}
+                  />
+                )
               )}
             </div>
           </div>
         ))}
 
-        {/* Bottom Row */}
+        {/* BOTTOM */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "2fr 1fr",
             gap: 8,
-            marginTop: 6,
           }}
         >
-          {/* Picking */}
-          <div style={card("#16a34a")}>
-            <div
-              style={{
-                fontWeight: "bold",
-                marginBottom: 6,
-              }}
-            >
-              Picking Operators
-            </div>
+          {/* PICKING */}
+          <div style={box("#16a34a")}>
+            <div style={titleStyle}>Picking Operators</div>
 
             <div
               style={{
-                fontSize: 12,
-                lineHeight: "18px",
+                display: "grid",
+                gridTemplateColumns: "repeat(3,1fr)",
+                gap: 4,
+                fontSize: 15,
+                lineHeight: "22px",
               }}
             >
-              {picking.join(", ")}
+              {picking.map((n) => (
+                <div key={n}>{n}</div>
+              ))}
             </div>
           </div>
 
-          {/* Not In */}
-          <div style={card("#0ea5e9")}>
-            <div
-              style={{
-                fontWeight: "bold",
-                marginBottom: 6,
-              }}
-            >
-              Not In
-            </div>
+          {/* NOT IN */}
+          <div style={box("#0ea5e9")}>
+            <div style={titleStyle}>Not In</div>
 
-            {safe(teamData.notin, 12).map(
+            {safeArray(teamData.notin, 12).map(
               (v, i) => (
                 <select
                   key={i}
-                  disabled={locked}
                   value={v}
+                  disabled={locked}
                   onChange={(e) =>
-                    assign(
+                    updateField(
                       "notin",
                       i,
                       e.target.value,
                       12
                     )
                   }
-                  style={{
-                    width: "100%",
-                    marginBottom: 4,
-                    fontSize: 11,
-                  }}
+                  style={selectStyle}
                 >
-                  <option value="">
-                    -{i + 1}-
-                  </option>
+                  <option value="">-{i + 1}-</option>
 
-                  {allNames.map((n) => (
+                  {allPeople.map((n) => (
                     <option key={n}>{n}</option>
                   ))}
                 </select>
@@ -624,8 +648,8 @@ export default function App() {
           justifyContent: "center",
           alignItems: "center",
           color: "#64748b",
-          fontSize: 24,
           fontWeight: "bold",
+          fontSize: 22,
         }}
       >
         KPI PANEL

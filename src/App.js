@@ -852,13 +852,12 @@ export default function App() {
                   await saveShared(boardData, staff, false, team);
                 }
               }}
-            >
+                        >
               Unlock
             </button>
-                    </button>
+          </div>
         </div>
-      </div>
-    )}
+      )}
 
     {/* STAFF POPUP */}
       {showStaff && (

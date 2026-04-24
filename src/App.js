@@ -855,11 +855,12 @@ export default function App() {
             >
               Unlock
             </button>
-          </div>
+                    </button>
         </div>
-      )}
+      </div>
+    )}
 
-      {/* STAFF POPUP */}
+    {/* STAFF POPUP */}
       {showStaff && (
         <div style={{
           position: "fixed",

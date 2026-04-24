@@ -720,11 +720,12 @@ export default function App() {
         ))}
 
         {/* BOTTOM */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "2fr 1fr",
-          gap: 6,
-        }}>
+<div style={{
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr",
+  gap: 6,
+  alignItems: "start",
+}}>
           {/* PICKING */}
           <div style={cardStyle("#16a34a")}>
            <div
@@ -756,7 +757,12 @@ export default function App() {
           </div>
 
           {/* NOT IN */}
-          <div style={cardStyle("#0ea5e9")}>
+          <div
+  style={{
+    ...cardStyle("#0ea5e9"),
+    marginTop: -120
+  }}
+>
             <div style={{ fontSize: 12, fontWeight: "bold", marginBottom: 6 }}>
               Not In
             </div>

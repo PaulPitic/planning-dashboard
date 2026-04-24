@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
@@ -20,19 +21,20 @@ const db = getFirestore(app);
 const PASSWORD = "1234";
 
 const buttonStyle = {
-  padding: "8px 12px",
-  borderRadius: 10,
+  padding: "6px 10px",
+  borderRadius: 8,
   border: "none",
   color: "#fff",
   fontWeight: 700,
   cursor: "pointer",
+  fontSize: 12,
 };
 
 const cardStyle = (color) => ({
   background: "#1e293b",
-  borderLeft: `6px solid ${color}`,
-  borderRadius: 12,
-  padding: 10,
+  borderLeft: `5px solid ${color}`,
+  borderRadius: 10,
+  padding: 8,
 });
 
 /* =====================================================
@@ -95,7 +97,7 @@ const areas = [
 ];
 
 /* =====================================================
-   DEFAULT STAFF
+   STAFF
 ===================================================== */
 const defaultStaff = {
   supervisors: [
@@ -132,23 +134,23 @@ const defaultStaff = {
    HELPERS
 ===================================================== */
 function createBoard() {
-  const out = {};
+  const obj = {};
 
   teams.forEach((team) => {
-    out[team] = {};
+    obj[team] = {};
 
     leadershipPositions.forEach((p) => {
-      out[team][p] = "";
+      obj[team][p] = "";
     });
 
     areas.forEach((area) => {
       area.positions.forEach((pos) => {
-        out[team][pos.name] = Array(pos.slots).fill("");
+        obj[team][pos.name] = Array(pos.slots).fill("");
       });
     });
   });
 
-  return out;
+  return obj;
 }
 
 /* =====================================================
@@ -253,69 +255,38 @@ export default function App() {
 
   const teamData = boardData[team];
 
-  /* =====================================================
-     ASSIGN
-  ===================================================== */
   const assignSlot = (role, index, value) => {
     if (locked) return;
 
-    const used = [];
-
-    Object.values(teamData).forEach((val) => {
-      if (Array.isArray(val)) val.forEach((x) => x && used.push(x));
-      else if (val) used.push(val);
-    });
-
-    const current = teamData[role][index];
-    const filtered = used.filter((u) => u !== current);
-
-    if (value && filtered.includes(value)) return;
-
-    const updatedSlots = [...teamData[role]];
-    updatedSlots[index] = value;
+    const updated = [...teamData[role]];
+    updated[index] = value;
 
     setBoardData({
       ...boardData,
       [team]: {
         ...boardData[team],
-        [role]: updatedSlots,
+        [role]: updated,
       },
     });
   };
 
-  const addStaff = () => {
-    if (!newName.trim()) return;
-
-    setStaff({
-      ...staff,
-      [staffCat]: [...staff[staffCat], newName.trim()],
-    });
-
-    setNewName("");
-  };
-
-  const removeStaff = (name) => {
-    setStaff({
-      ...staff,
-      [staffCat]: staff[staffCat].filter((n) => n !== name),
-    });
-  };
-
   const renderArea = (area) => (
-    <div key={area.name} style={{marginBottom:10}}>
-      <h3 style={{color:area.color}}>{area.name}</h3>
+    <div key={area.name} style={{marginBottom:6}}>
+      <h3 style={{color:area.color,fontSize:13,margin:"2px 0"}}>
+        {area.name}
+      </h3>
 
       <div style={{
         display:"grid",
-        gap:8,
-        gridTemplateColumns:"repeat(2,1fr)"
+        gridTemplateColumns:"repeat(3,1fr)",
+        gap:6
       }}>
         {area.positions.map((pos)=>(
           <div key={pos.name} style={cardStyle(area.color)}>
             <div style={{
               fontWeight:"bold",
-              fontSize:15,
-              marginBottom:6
+              fontSize:12,
+              marginBottom:4
             }}>
               {pos.name}
             </div>
@@ -330,12 +301,13 @@ export default function App() {
                 }
                 style={{
                   width:"100%",
-                  padding:6,
-                  marginBottom:6,
-                  borderRadius:8
+                  padding:4,
+                  marginBottom:4,
+                  fontSize:11,
+                  borderRadius:6
                 }}
               >
-                <option value="">Slot {idx+1}</option>
+                <option value="">-{idx+1}-</option>
 
                 {staff[team].map((n)=>(
                   <option key={n}>{n}</option>
@@ -350,25 +322,31 @@ export default function App() {
 
   return (
     <div style={{
-      minHeight:"100vh",
+      height:"100vh",
       background:"#0f172a",
       color:"#fff",
-      display:"flex"
+      display:"flex",
+      overflow:"hidden"
     }}>
-      {/* LEFT HALF */}
+      {/* LEFT 75% */}
       <div style={{
-        width:"50%",
-        padding:12,
-        overflowY:"auto"
+        width:"75%",
+        padding:8,
+        overflow:"hidden"
       }}>
-        <h1 style={{fontSize:24}}>📺 Planning Dashboard</h1>
+        <h1 style={{
+          fontSize:18,
+          margin:"0 0 6px 0"
+        }}>
+          📺 Planning Dashboard
+        </h1>
 
         {/* TOP BAR */}
         <div style={{
           display:"flex",
-          gap:8,
+          gap:6,
           flexWrap:"wrap",
-          marginBottom:12
+          marginBottom:6
         }}>
           {teams.map((t)=>(
             <button
@@ -399,7 +377,7 @@ export default function App() {
               }
             }}
           >
-            {locked ? "🔒 Locked" : "🔓 Unlocked"}
+            {locked ? "🔒" : "🔓"}
           </button>
 
           <button
@@ -409,7 +387,7 @@ export default function App() {
             }}
             onClick={()=>saveShared()}
           >
-            ✅ Apply
+            Apply
           </button>
 
           <button
@@ -419,22 +397,23 @@ export default function App() {
             }}
             onClick={()=>setShowStaff(true)}
           >
-            ⚙️ Manage Staff
+            Staff
           </button>
         </div>
 
         {/* Leadership */}
         <div style={{
           display:"grid",
-          gridTemplateColumns:"repeat(2,1fr)",
-          gap:8,
-          marginBottom:12
+          gridTemplateColumns:"repeat(4,1fr)",
+          gap:6,
+          marginBottom:6
         }}>
           {leadershipPositions.map((pos)=>(
             <div key={pos} style={cardStyle("#facc15")}>
               <div style={{
+                fontSize:11,
                 fontWeight:"bold",
-                marginBottom:6
+                marginBottom:4
               }}>
                 {pos}
               </div>
@@ -453,11 +432,11 @@ export default function App() {
                 }}
                 style={{
                   width:"100%",
-                  padding:6,
-                  borderRadius:8
+                  padding:4,
+                  fontSize:11
                 }}
               >
-                <option value="">Select</option>
+                <option value="">-</option>
 
                 {(pos.includes("Supervisor")
                   ? staff.supervisors
@@ -473,141 +452,19 @@ export default function App() {
         {areas.map(renderArea)}
       </div>
 
-      {/* RIGHT HALF */}
+      {/* RIGHT 25% */}
       <div style={{
-        width:"50%",
+        width:"25%",
         borderLeft:"1px solid #334155",
         display:"flex",
         justifyContent:"center",
         alignItems:"center",
         color:"#64748b",
-        fontSize:28,
+        fontSize:18,
         fontWeight:700
       }}>
-        KPI / NOTES / TARGETS PANEL
+        KPI PANEL
       </div>
-
-      {/* STAFF POPUP */}
-      {showStaff && (
-        <div style={{
-          position:"fixed",
-          inset:0,
-          background:"rgba(0,0,0,.7)",
-          display:"flex",
-          justifyContent:"center",
-          alignItems:"center"
-        }}>
-          <div style={{
-            background:"#1e293b",
-            padding:20,
-            borderRadius:14,
-            width:"90%",
-            maxWidth:500
-          }}>
-            <h2>⚙️ Staff Manager</h2>
-
-            <select
-              value={staffCat}
-              onChange={(e)=>setStaffCat(e.target.value)}
-              style={{
-                width:"100%",
-                padding:8,
-                marginBottom:10
-              }}
-            >
-              <option>Team A</option>
-              <option>Team B</option>
-              <option>supervisors</option>
-              <option>coordinators</option>
-            </select>
-
-            <div style={{
-              display:"flex",
-              gap:8,
-              marginBottom:12
-            }}>
-              <input
-                value={newName}
-                onChange={(e)=>setNewName(e.target.value)}
-                placeholder="New Name"
-                style={{
-                  flex:1,
-                  padding:8,
-                  borderRadius:8
-                }}
-              />
-
-              <button
-                style={{
-                  ...buttonStyle,
-                  background:"#16a34a"
-                }}
-                onClick={addStaff}
-              >
-                Add
-              </button>
-            </div>
-
-            <div style={{
-              maxHeight:300,
-              overflowY:"auto",
-              marginBottom:12
-            }}>
-              {staff[staffCat].map((n)=>(
-                <div
-                  key={n}
-                  style={{
-                    display:"flex",
-                    justifyContent:"space-between",
-                    marginBottom:6
-                  }}
-                >
-                  <span>{n}</span>
-
-                  <button
-                    style={{
-                      ...buttonStyle,
-                      background:"#dc2626",
-                      padding:"4px 8px"
-                    }}
-                    onClick={()=>removeStaff(n)}
-                  >
-                    X
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            <div style={{
-              display:"flex",
-              gap:8
-            }}>
-              <button
-                style={{
-                  ...buttonStyle,
-                  background:"#22c55e"
-                }}
-                onClick={async ()=>{
-                  await saveShared(boardData, staff, locked, team);
-                  setShowStaff(false);
-                }}
-              >
-                Save
-              </button>
-
-              <button
-                style={{
-                  ...buttonStyle,
-                  background:"#475569"
-                }}
-                onClick={()=>setShowStaff(false)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Unlock Popup */}
       {showUnlock && (
@@ -624,7 +481,7 @@ export default function App() {
             padding:20,
             borderRadius:14
           }}>
-            <h2>Unlock Dashboard</h2>
+            <h2>Unlock</h2>
 
             <input
               type="password"
@@ -646,13 +503,156 @@ export default function App() {
                 if(unlockPass===PASSWORD){
                   setLocked(false);
                   setShowUnlock(false);
-                  setUnlockPass("");
                   await saveShared(boardData, staff, false, team);
                 }
               }}
             >
               Unlock
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Staff Popup */}
+      {showStaff && (
+        <div style={{
+          position:"fixed",
+          inset:0,
+          background:"rgba(0,0,0,.7)",
+          display:"flex",
+          justifyContent:"center",
+          alignItems:"center"
+        }}>
+          <div style={{
+            background:"#1e293b",
+            padding:20,
+            borderRadius:14,
+            width:420
+          }}>
+            <h2>Staff Manager</h2>
+
+            <select
+              value={staffCat}
+              onChange={(e)=>setStaffCat(e.target.value)}
+              style={{
+                width:"100%",
+                padding:8,
+                marginBottom:8
+              }}
+            >
+              <option>Team A</option>
+              <option>Team B</option>
+              <option>supervisors</option>
+              <option>coordinators</option>
+            </select>
+
+            <div style={{
+              display:"flex",
+              gap:6,
+              marginBottom:10
+            }}>
+              <input
+                value={newName}
+                onChange={(e)=>setNewName(e.target.value)}
+                placeholder="New name"
+                style={{
+                  flex:1,
+                  padding:8
+                }}
+              />
+
+              <button
+                style={{
+                  ...buttonStyle,
+                  background:"#16a34a"
+                }}
+                onClick={()=>{
+                  if(!newName.trim()) return;
+
+                  setStaff({
+                    ...staff,
+                    [staffCat]: [
+                      ...staff[staffCat],
+                      newName.trim()
+                    ]
+                  });
+
+                  setNewName("");
+                }}
+              >
+                Add
+              </button>
+            </div>
+
+            <div style={{
+              maxHeight:260,
+              overflowY:"auto",
+              marginBottom:10
+            }}>
+              {staff[staffCat].map((n)=>(
+                <div
+                  key={n}
+                  style={{
+                    display:"flex",
+                    justifyContent:"space-between",
+                    marginBottom:6
+                  }}
+                >
+                  <span>{n}</span>
+
+                  <button
+                    style={{
+                      ...buttonStyle,
+                      background:"#dc2626"
+                    }}
+                    onClick={()=>{
+                      setStaff({
+                        ...staff,
+                        [staffCat]:
+                          staff[staffCat].filter(
+                            (x)=>x!==n
+                          )
+                      });
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div style={{
+              display:"flex",
+              gap:6
+            }}>
+              <button
+                style={{
+                  ...buttonStyle,
+                  background:"#22c55e"
+                }}
+                onClick={async ()=>{
+                  await saveShared(
+                    boardData,
+                    staff,
+                    locked,
+                    team
+                  );
+                  setShowStaff(false);
+                }}
+              >
+                Save
+              </button>
+
+              <button
+                style={{
+                  ...buttonStyle,
+                  background:"#475569"
+                }}
+                onClick={()=>setShowStaff(false)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

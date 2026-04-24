@@ -461,9 +461,28 @@ export default function App() {
                   }}
                 >
                   <option value="">-{i + 1}-</option>
-                  {optionsList.map((n) => (
-                    <option key={n}>{n}</option>
-                  ))}
+                  {optionsList
+  .filter((name) => {
+    const usedPeople = [];
+
+    Object.entries(teamData).forEach(([k, arr]) => {
+      if (Array.isArray(arr)) {
+        arr.forEach((p, idx) => {
+          if (
+            p &&
+            !(k === item.key && idx === i)
+          ) {
+            usedPeople.push(p);
+          }
+        });
+      }
+    });
+
+    return !usedPeople.includes(name);
+  })
+  .map((n) => (
+    <option key={n}>{n}</option>
+  ))}
                 </select>
               ))}
             </div>

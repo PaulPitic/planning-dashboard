@@ -68,14 +68,14 @@ const areas = [
   },
   {
     name: "Docs / Pallet",
-    color: "#f97316",
-    items: [
-      { key: "doc", label: "Document Applier", slots: 2, split: true },
-      { key: "pal1", label: "Palletiser A", slots: 3, split: true },
-      { key: "pal2", label: "Palletiser B", slots: 3, split: true },
-      { key: "drop", label: "Trolley Dropper", slots: 1, split: true },
-      { key: "box", label: "Box Filler", slots: 1, split: true },
-    ],
+items: [
+  { key: "doc", label: "Document Applier", slots: 2, split: true },
+  { key: "pal1", label: "Palletiser A", slots: 3, split: true },
+  { key: "pal2", label: "Palletiser B", slots: 3, split: true },
+  { key: "notin", label: "Not In", slots: 12 },
+  { key: "drop", label: "Trolley Dropper", slots: 1, split: true },
+  { key: "box", label: "Box Filler", slots: 1, split: true },
+],
   },
   {
     name: "VAS / Nester",

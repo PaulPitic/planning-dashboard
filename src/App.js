@@ -257,6 +257,12 @@ export default function App() {
   const [staffCat, setStaffCat] = useState("Team A");
   const [newName, setNewName] = useState("");
 
+  const [aFlowTeamA, setAFlowTeamA] = useState(Array(15).fill(""));
+  const [aFlowTeamB, setAFlowTeamB] = useState(Array(15).fill(""));
+
+  const [aFlowRoleA, setAFlowRoleA] = useState(Array(15).fill(""));
+  const [aFlowRoleB, setAFlowRoleB] = useState(Array(15).fill(""));
+
   /* ===================================================== */
 
    useEffect(() => {
@@ -889,73 +895,144 @@ export default function App() {
   </div>
 
   {/* TEAM A */}
+<div
+  style={{
+    background: "#1e293b",
+    padding: 8,
+    borderRadius: 8,
+    marginBottom: 10,
+  }}
+>
+  <div style={{ fontWeight: "bold", marginBottom: 6 }}>TEAM A</div>
+
+  {aFlowTeamA.map((value, i) => (
   <div
+    key={i}
     style={{
-      background: "#1e293b",
-      padding: 8,
-      borderRadius: 8,
-      marginBottom: 10,
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 4,
+      marginBottom: 4,
     }}
   >
-    <div style={{ fontWeight: "bold", marginBottom: 6 }}>TEAM A</div>
-    {[
-      "Skitinas Edgaras",
-      "Gomez Gina",
-      "Gonzalez Jose",
-      "Andrushehenko Kyrylo",
-      "Sienkiewicz Mariusz",
-      "Simirska Marta",
-      "Ostapuk Oleksander",
-      "Shytyk Oleksandr",
-      "Goyke Przemyslaw",
-      "Tanasienko Serhii (BHV)",
-      "Vinkovic Velimir",
-      "Ciprian - ionut Iacob",
-      "Palun Igor",
-      "Kyrou Nikolaos (BHV)",
-      "Macaay Shandell",
-      "Falhi Tarik",
-      "Gorzkiewicz Gerard (BHV)",
-    ].map((name) => (
-      <div key={name} style={{ fontSize: 12, marginBottom: 3 }}>
-        {name}
-      </div>
-    ))}
+    <select
+      disabled={locked}
+      value={value}
+      onChange={(e) => {
+        const updated = [...aFlowTeamA];
+        updated[i] = e.target.value;
+        setAFlowTeamA(updated);
+      }}
+      style={{ padding: 4, fontSize: 11 }}
+    >
+      <option value="">- Slot {i + 1} -</option>
+
+      {[
+        "Skitinas Edgaras",
+        "Gomez Gina",
+        "Gonzalez Jose",
+        "Andrushehenko Kyrylo",
+        "Sienkiewicz Mariusz",
+        "Simirska Marta",
+        "Ostapuk Oleksander",
+        "Shytyk Oleksandr",
+        "Goyke Przemyslaw",
+        "Tanasienko Serhii (BHV)",
+        "Vinkovic Velimir",
+        "Ciprian - ionut Iacob",
+        "Palun Igor",
+        "Kyrou Nikolaos (BHV)",
+        "Macaay Shandell",
+        "Falhi Tarik",
+        "Gorzkiewicz Gerard (BHV)",
+      ].map((name) => (
+        <option key={name}>{name}</option>
+      ))}
+    </select>
+
+    <input
+      disabled={locked}
+      value={aFlowRoleA[i]}
+      onChange={(e) => {
+        const updated = [...aFlowRoleA];
+        updated[i] = e.target.value;
+        setAFlowRoleA(updated);
+      }}
+      placeholder="Sup B-Flow / note"
+      style={{ padding: 4, fontSize: 11 }}
+    />
   </div>
+))}
+</div>
 
   {/* TEAM B */}
+<div
+  style={{
+    background: "#1e293b",
+    padding: 8,
+    borderRadius: 8,
+  }}
+>
+  <div style={{ fontWeight: "bold", marginBottom: 6 }}>TEAM B</div>
+
+  {aFlowTeamB.map((value, i) => (
   <div
+    key={i}
     style={{
-      background: "#1e293b",
-      padding: 8,
-      borderRadius: 8,
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 4,
+      marginBottom: 4,
     }}
   >
-    <div style={{ fontWeight: "bold", marginBottom: 6 }}>TEAM B</div>
-    {[
-      "Dorobek Aleksandra",
-      "George Andrei (BHV)",
-      "Papan Antonio",
-      "Papan Costel",
-      "Arbos Killian",
-      "Godlewski Lukasz",
-      "Domenech Marc",
-      "Wizyn-Jastrzebski Mateusz",
-      "Gliszczynski-Mrozek Przemyslaw (BHV)",
-      "Kania Regina",
-      "Shushvalov Vladyslav",
-      "Vasyl Kytsak",
-      "Francisco Rafael Rodrigues André",
-      "Kyrou Nikolaos (BHV)",
-      "Macaay Shandell",
-      "Falhi Tarik",
-      "Gorzkiewicz Gerard (BHV)",
-    ].map((name) => (
-      <div key={name} style={{ fontSize: 12, marginBottom: 3 }}>
-        {name}
-      </div>
-    ))}
+    <select
+      disabled={locked}
+      value={value}
+      onChange={(e) => {
+        const updated = [...aFlowTeamB];
+        updated[i] = e.target.value;
+        setAFlowTeamB(updated);
+      }}
+      style={{ padding: 4, fontSize: 11 }}
+    >
+      <option value="">- Slot {i + 1} -</option>
+
+      {[
+        "Dorobek Aleksandra",
+        "George Andrei (BHV)",
+        "Papan Antonio",
+        "Papan Costel",
+        "Arbos Killian",
+        "Godlewski Lukasz",
+        "Domenech Marc",
+        "Wizyn-Jastrzebski Mateusz",
+        "Gliszczynski-Mrozek Przemyslaw (BHV)",
+        "Kania Regina",
+        "Shushvalov Vladyslav",
+        "Vasyl Kytsak",
+        "Francisco Rafael Rodrigues André",
+        "Kyrou Nikolaos (BHV)",
+        "Macaay Shandell",
+        "Falhi Tarik",
+        "Gorzkiewicz Gerard (BHV)",
+      ].map((name) => (
+        <option key={name}>{name}</option>
+      ))}
+    </select>
+
+    <input
+      disabled={locked}
+      value={aFlowRoleB[i]}
+      onChange={(e) => {
+        const updated = [...aFlowRoleB];
+        updated[i] = e.target.value;
+        setAFlowRoleB(updated);
+      }}
+      placeholder="Sup B-Flow / note"
+      style={{ padding: 4, fontSize: 11 }}
+    />
   </div>
+))}
 </div>
 
       {/* UNLOCK POPUP */}

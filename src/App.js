@@ -890,9 +890,20 @@ export default function App() {
 
   {/* BUTTONS */}
   <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
-    <button style={{ flex: 1 }}>Staff Management</button>
-    <button style={{ flex: 1 }}>Lock</button>
-  </div>
+  <button
+    style={{ ...buttonStyle, flex: 1 }}
+    onClick={() => setShowStaff(true)}
+  >
+    Staff Management
+  </button>
+
+  <button
+    style={{ ...buttonStyle, flex: 1 }}
+    onClick={() => setLocked(!locked)}
+  >
+    {locked ? "Unlock" : "Lock"}
+  </button>
+</div>
 
   {/* TEAM A */}
 <div

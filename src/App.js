@@ -196,6 +196,45 @@ const defaultStaff = {
     "Selvavinayagam Mike",
     "Fotini Varsamidou",
   ],
+   "A-FLOW A": [
+  "Skitinas Edgaras",
+  "Gomez Gina",
+  "Gonzalez Jose",
+  "Andrushehenko Kyrylo",
+  "Sienkiewicz Mariusz",
+  "Simirska Marta",
+  "Ostapuk Oleksander",
+  "Shytyk Oleksandr",
+  "Goyke Przemyslaw",
+  "Tanasienko Serhii (BHV)",
+  "Vinkovic Velimir",
+  "Ciprian - ionut Iacob",
+  "Palun Igor",
+  "Kyrou Nikolaos (BHV)",
+  "Macaay Shandell",
+  "Falhi Tarik",
+  "Gorzkiewicz Gerard (BHV)"
+],
+
+"A-FLOW B": [
+  "Dorobek Aleksandra",
+  "George Andrei (BHV)",
+  "Papan Antonio",
+  "Papan Costel",
+  "Arbos Killian",
+  "Godlewski Lukasz",
+  "Domenech Marc",
+  "Wizyn-Jastrzebski Mateusz",
+  "Gliszczynski-Mrozek Przemyslaw (BHV)",
+  "Kania Regina",
+  "Shushvalov Vladyslav",
+  "Vasyl Kytsak",
+  "Francisco Rafael Rodrigues André",
+  "Kyrou Nikolaos (BHV)",
+  "Macaay Shandell",
+  "Falhi Tarik",
+  "Gorzkiewicz Gerard (BHV)"
+],
 };
 
 /* =====================================================
@@ -1127,10 +1166,12 @@ export default function App() {
                 marginBottom: 8,
               }}
             >
-              <option>Team A</option>
-              <option>Team B</option>
-              <option>supervisors</option>
-              <option>coordinators</option>
+              <option>A-FLOW A</option>
+<option>A-FLOW B</option>
+<option>Team A</option>
+<option>Team B</option>
+<option>supervisors</option>
+<option>coordinators</option>
             </select>
 
             <div style={{

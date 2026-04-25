@@ -756,41 +756,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* NOT IN */}
-          <div
-  style={{
-    ...cardStyle("#0ea5e9"),
-   display: "block"
-  }}
->
-            <div style={{ fontSize: 12, fontWeight: "bold", marginBottom: 6 }}>
-              Not In
-            </div>
-
-            {safeArray(teamData.notin, 12).map((v, i) => (
-              <select
-                key={i}
-                disabled={locked}
-                value={v}
-                onChange={(e) =>
-                  assign("notin", i, e.target.value, 12)
-                }
-                style={{
-                  width: "100%",
-                  marginBottom: 4,
-                  padding: 4,
-                  fontSize: 11,
-                }}
-              >
-                <option value="">-{i + 1}-</option>
-                {allPeople.map((n) => (
-                  <option key={n}>{n}</option>
-                ))}
-              </select>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* RIGHT */}
       <div style={{

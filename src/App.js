@@ -796,71 +796,7 @@ export default function App() {
     </div>
   </div>
 </div>
-          {/* PICKING */}
-          <div style={cardStyle("#16a34a")}>
-           <div
-  style={{
-    fontSize: 13,
-    fontWeight: "bold",
-    color: "#ffffff",
-    background: "#166534",
-    padding: "5px 8px",
-    borderRadius: 6,
-    marginBottom: 6,
-    textAlign: "center",
-    letterSpacing: 0.4,
-  }}
->
-  Picking Operations
-</div>
-
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3,1fr)",
-              gap: 4,
-              fontSize: 14,
-            }}>
-              {picking.map((name) => (
-                <div key={name}>{name}</div>
-              ))}
-            </div>
-          </div>
-
-          {/* NOT IN */}
-          <div
-  style={{
-    ...cardStyle("#0ea5e9"),
-    marginTop: -120
-  }}
->
-            <div style={{ fontSize: 12, fontWeight: "bold", marginBottom: 6 }}>
-              Not In
-            </div>
-
-            {safeArray(teamData.notin, 12).map((v, i) => (
-              <select
-                key={i}
-                disabled={locked}
-                value={v}
-                onChange={(e) =>
-                  assign("notin", i, e.target.value, 12)
-                }
-                style={{
-                  width: "100%",
-                  marginBottom: 4,
-                  padding: 4,
-                  fontSize: 11,
-                }}
-              >
-                <option value="">-{i + 1}-</option>
-                {allPeople.map((n) => (
-                  <option key={n}>{n}</option>
-                ))}
-              </select>
-            ))}
-                </div>
-    </div>
-
+   
     {/* RIGHT */}
     <div
       style={{

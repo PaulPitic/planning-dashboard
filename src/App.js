@@ -721,12 +721,42 @@ export default function App() {
 
         {/* BOTTOM */}
 <div style={{
-  display: "flex",
-  flexDirection: "column",
+  display: "grid",
+  gridTemplateColumns: "1fr",
   gap: 6,
-  alignItems: "stretch",
+  alignItems: "start",
 }}>
- {/* NOT IN */}
+          {/* PICKING */}
+          <div style={cardStyle("#16a34a")}>
+           <div
+  style={{
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#ffffff",
+    background: "#166534",
+    padding: "5px 8px",
+    borderRadius: 6,
+    marginBottom: 6,
+    textAlign: "center",
+    letterSpacing: 0.4,
+  }}
+>
+  Picking Operations
+</div>
+
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3,1fr)",
+              gap: 4,
+              fontSize: 14,
+            }}>
+              {picking.map((name) => (
+                <div key={name}>{name}</div>
+              ))}
+            </div>
+          </div>
+
+          {/* NOT IN */}
           <div
   style={{
     ...cardStyle("#0ea5e9"),
@@ -758,41 +788,11 @@ export default function App() {
                 ))}
               </select>
             ))}
-          {/* PICKING */}
-          <div style={cardStyle("#16a34a")}>
-           <div
-               </div>
+          </div>
         </div>
       </div>
-         
-  style={{
-    fontSize: 13,
-    fontWeight: "bold",
-    color: "#ffffff",
-    background: "#166534",
-    padding: "5px 8px",
-    borderRadius: 6,
-    marginBottom: 6,
-    textAlign: "center",
-    letterSpacing: 0.4,
-  }}
->
-  Picking Operations
-</div>
 
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3,1fr)",
-              gap: 4,
-              fontSize: 14,
-            }}>
-              {picking.map((name) => (
-                <div key={name}>{name}</div>
-              ))}
-            </div>
-          </div>
-
-          {/* RIGHT */}
+      {/* RIGHT */}
       <div style={{
         width: "25%",
         borderLeft: "1px solid #334155",

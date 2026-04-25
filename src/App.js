@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
-
 /* =====================================================
    FIREBASE
 ===================================================== */
@@ -794,8 +793,7 @@ export default function App() {
         </select>
       ))}
     </div>
-
-    </div>
+</div>
    
     {/* RIGHT */}
     <div

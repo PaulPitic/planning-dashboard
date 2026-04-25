@@ -794,8 +794,8 @@ export default function App() {
         </select>
       ))}
     </div>
-  </div>
-</div>
+
+    </div>
    
     {/* RIGHT */}
     <div

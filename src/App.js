@@ -461,9 +461,21 @@ export default function App() {
      if (item.key === "notin") {
   return (
     <div key={item.key} style={cardStyle(color)}>
-      <div style={{ fontSize: 12, fontWeight: "bold", marginBottom: 4 }}>
-        {item.label}
-      </div>
+      <div
+  style={{
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#ffffff",
+    background: "#0284c7",
+    padding: "5px 8px",
+    borderRadius: 6,
+    marginBottom: 6,
+    textAlign: "center",
+    letterSpacing: 0.4,
+  }}
+>
+  {item.label}
+</div>
 
       <div
         style={{

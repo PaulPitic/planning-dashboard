@@ -941,19 +941,39 @@ export default function App() {
   </div>
 
   {/* BUTTONS */}
-  <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
+  <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
   <button
-    style={{ ...buttonStyle, flex: 1 }}
     onClick={() => setShowStaff(true)}
+    style={{
+      ...buttonStyle,
+      flex: 1,
+      background: "#0ea5e9",
+      color: "#ffffff",
+      fontWeight: "bold",
+      border: "1px solid #38bdf8",
+      boxShadow: "0 0 10px rgba(14,165,233,.35)",
+    }}
   >
     Staff Management
   </button>
 
   <button
-    style={{ ...buttonStyle, flex: 1 }}
     onClick={() => setLocked(!locked)}
+    style={{
+      ...buttonStyle,
+      flex: 1,
+      background: locked ? "#dc2626" : "#16a34a",
+      color: "#ffffff",
+      fontWeight: "bold",
+      border: locked
+        ? "1px solid #f87171"
+        : "1px solid #4ade80",
+      boxShadow: locked
+        ? "0 0 10px rgba(220,38,38,.35)"
+        : "0 0 10px rgba(22,163,74,.35)",
+    }}
   >
-    {locked ? "Unlock" : "Lock"}
+    {locked ? "🔒 Locked" : "🔓 Unlocked"}
   </button>
 </div>
 

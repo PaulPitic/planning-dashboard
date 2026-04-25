@@ -741,56 +741,61 @@ export default function App() {
     letterSpacing: 0.4,
   }}
 >
-  Picking Operations
-</div>
-
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3,1fr)",
-              gap: 4,
-              fontSize: 14,
-            }}>
-              {picking.map((name) => (
-                <div key={name}>{name}</div>
-              ))}
-            </div>
-          </div>
-
-          {/* NOT IN */}
-          <div
+  {/* NOT IN */}
+<div
   style={{
-    ...cardStyle("#0ea5e9"),
-    marginTop: -120
+    ...cardStyle("#0ea5e9")
   }}
 >
-            <div style={{ fontSize: 12, fontWeight: "bold", marginBottom: 6 }}>
-              Not In
-            </div>
+  <div style={{ fontSize: 12, fontWeight: "bold", marginBottom: 6 }}>
+    Not In
+  </div>
 
-            {safeArray(teamData.notin, 12).map((v, i) => (
-              <select
-                key={i}
-                disabled={locked}
-                value={v}
-                onChange={(e) =>
-                  assign("notin", i, e.target.value, 12)
-                }
-                style={{
-                  width: "100%",
-                  marginBottom: 4,
-                  padding: 4,
-                  fontSize: 11,
-                }}
-              >
-                <option value="">-{i + 1}-</option>
-                {allPeople.map((n) => (
-                  <option key={n}>{n}</option>
-                ))}
-              </select>
-            ))}
-          </div>
-        </div>
-      </div>
+  {safeArray(teamData.notin, 12).map((v, i) => (
+    <select
+      key={i}
+      disabled={locked}
+      value={v}
+      onChange={(e) => assign("notin", i, e.target.value, 12)}
+      style={{
+        width: "100%",
+        marginBottom: 4,
+        padding: 4,
+        fontSize: 11,
+      }}
+    >
+      <option value="">-{i + 1}-</option>
+      {allPeople.map((n) => (
+        <option key={n}>{n}</option>
+      ))}
+    </select>
+  ))}
+</div>
+
+{/* PICKING OPERATIONS */}
+<div
+  style={{
+    ...cardStyle("#22c55e"),
+    gridColumn: "1 / -1"
+  }}
+>
+  <div style={{ fontSize: 12, fontWeight: "bold", marginBottom: 6 }}>
+    Picking Operations
+  </div>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(3,1fr)",
+      gap: 4,
+      fontSize: 14,
+    }}
+  >
+    {picking.map((name) => (
+      <div key={name}>{name}</div>
+    ))}
+  </div>
+</div>
 
       {/* RIGHT */}
       <div style={{

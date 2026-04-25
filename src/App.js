@@ -302,6 +302,8 @@ export default function App() {
   const [aFlowRoleA, setAFlowRoleA] = useState(Array(15).fill(""));
   const [aFlowRoleB, setAFlowRoleB] = useState(Array(15).fill(""));
 
+   const [openFlowTeam, setOpenFlowTeam] = useState("A");
+
   /* ===================================================== */
 
    useEffect(() => {
@@ -986,9 +988,22 @@ export default function App() {
     marginBottom: 10,
   }}
 >
-  <div style={{ fontWeight: "bold", marginBottom: 6 }}>TEAM A</div>
+  <div
+  onClick={() => setOpenFlowTeam("A")}
+  style={{
+    fontWeight: "bold",
+    marginBottom: 6,
+    cursor: "pointer",
+    background: openFlowTeam === "A" ? "#0f766e" : "#334155",
+    padding: 6,
+    borderRadius: 6,
+  }}
+>
+  {openFlowTeam === "A" ? "▼" : "▶"} TEAM A
+</div>
 
-  {aFlowTeamA.map((value, i) => (
+  {openFlowTeam === "A" &&
+  aFlowTeamA.map((value, i) => (
   <div
     key={i}
     style={{
@@ -1040,9 +1055,22 @@ export default function App() {
     borderRadius: 8,
   }}
 >
-  <div style={{ fontWeight: "bold", marginBottom: 6 }}>TEAM B</div>
+  <div
+  onClick={() => setOpenFlowTeam("B")}
+  style={{
+    fontWeight: "bold",
+    marginBottom: 6,
+    cursor: "pointer",
+    background: openFlowTeam === "B" ? "#0f766e" : "#334155",
+    padding: 6,
+    borderRadius: 6,
+  }}
+>
+  {openFlowTeam === "B" ? "▼" : "▶"} TEAM B
+</div>
 
-  {aFlowTeamB.map((value, i) => (
+  {openFlowTeam === "B" &&
+  aFlowTeamB.map((value, i) => (
     <div
       key={i}
       style={{

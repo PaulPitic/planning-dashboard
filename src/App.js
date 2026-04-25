@@ -317,46 +317,48 @@ export default function App() {
       const savedStaff = data.staff || {};
 
       setStaff({
-        supervisors: [
-          ...new Set([
-            ...(savedStaff.supervisors || []),
-            ...defaultStaff.supervisors,
-          ]),
-        ],
+  Supervisors: [
+    ...new Set([
+      ...(savedStaff.supervisors || []),
+      ...defaultStaff.supervisors,
+    ]),
+  ],
 
-        coordinators: [
-          ...new Set([
-            ...(savedStaff.coordinators || []),
-            ...defaultStaff.coordinators,
-          ]),
-        ],
+  Coordinators: [
+    ...new Set([
+      ...(savedStaff.coordinators || []),
+      ...defaultStaff.coordinators,
+    ]),
+  ],
 
-        "Team A": [
-          ...new Set([
-            ...(savedStaff["Team A"] || []),
-            ...defaultStaff["Team A"],
-          ]),
-        ],
+  "Team A": [
+    ...new Set([
+      ...(savedStaff["Team A"] || []),
+      ...defaultStaff["Team A"],
+    ]),
+  ],
 
-        "Team B": [
-          ...new Set([
-            ...(savedStaff["Team B"] || []),
-            ...defaultStaff["Team B"],
-          ]),
-        ],
-      });
+  "Team B": [
+    ...new Set([
+      ...(savedStaff["Team B"] || []),
+      ...defaultStaff["Team B"],
+    ]),
+  ],
 
-      setLocked(data.locked ?? true);
-      setTeam(data.currentTeam || "Team A");
-    } else {
-      await setDoc(ref, {
-        board: createBoard(),
-        staff: defaultStaff,
-        locked: true,
-        currentTeam: "Team A",
-      });
-    }
-  });
+  "A-FLOW A": [
+    ...new Set([
+      ...(savedStaff["A-FLOW A"] || []),
+      ...defaultStaff["A-FLOW A"],
+    ]),
+  ],
+
+  "A-FLOW B": [
+    ...new Set([
+      ...(savedStaff["A-FLOW B"] || []),
+      ...defaultStaff["A-FLOW B"],
+    ]),
+  ],
+});
 
   return () => unsub();
 }, []);

@@ -758,12 +758,13 @@ export default function App() {
                 ))}
               </select>
             ))}
-          </div>
-        </div>
-      </div>
           {/* PICKING */}
           <div style={cardStyle("#16a34a")}>
            <div
+               </div>
+        </div>
+      </div>
+         
   style={{
     fontSize: 13,
     fontWeight: "bold",

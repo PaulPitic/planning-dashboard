@@ -729,17 +729,21 @@ export default function App() {
   /* =====================================================
      UI
   ===================================================== */
-  return (
-    <div style={{
-      height: "100vh",
-      background: "#0f172a",
-      color: "#fff",
-      display: "flex",
-      overflow: "hidden",
-      fontFamily: "Arial, sans-serif",
+ return (
+  <div style={{
+    minHeight: "100vh",
+    background: "#0f172a",
+    color: "#fff",
+    display: "flex",
+    flexDirection: window.innerWidth < 768 ? "column" : "row",
+    overflowX: "hidden",
+    fontFamily: "Arial, sans-serif",
     }}>
       {/* LEFT */}
-      <div style={{ width: "75%", padding: 8 }}>
+<div style={{
+  width: window.innerWidth < 768 ? "100%" : "75%",
+  padding: 8
+}}>
         <h1 style={{ margin: "0 0 6px 0", fontSize: 18 }}>
           📺 Planning Dashboard
         </h1>
@@ -796,7 +800,10 @@ export default function App() {
         {/* LEADERSHIP */}
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4,1fr)",
+          gridTemplateColumns:
+  window.innerWidth < 768
+    ? "repeat(2,1fr)"
+    : "repeat(4,1fr)",
           gap: 6,
           marginBottom: 6,
         }}>
@@ -819,7 +826,10 @@ export default function App() {
 
             <div style={{
               display: "grid",
-              gridTemplateColumns: "repeat(3,1fr)",
+              gridTemplateColumns:
+  window.innerWidth < 768
+    ? "1fr"
+    : "repeat(3,1fr)",
               gap: 6,
             }}>
               {area.items.map((item) =>
@@ -851,7 +861,10 @@ export default function App() {
   <div
     style={{
       display: "grid",
-      gridTemplateColumns: "repeat(6,1fr)",
+      gridTemplateColumns:
+  window.innerWidth < 768
+    ? "repeat(2,1fr)"
+    : "repeat(6,1fr)",
       gap: 4,
     }}
   >
@@ -920,7 +933,10 @@ export default function App() {
       {/* RIGHT */}
 <div
   style={{
-    width: "25%",
+    width: window.innerWidth < 768 ? "100%" : "25%",
+minHeight: window.innerWidth < 768 ? "auto" : "100vh",
+borderLeft: window.innerWidth < 768 ? "none" : "1px solid #334155",
+borderTop: window.innerWidth < 768 ? "1px solid #334155" : "none",
     borderLeft: "1px solid #334155",
     padding: 10,
     overflowY: "auto",
@@ -1180,7 +1196,9 @@ export default function App() {
             background: "#1e293b",
             padding: 20,
             borderRadius: 14,
-            width: 420,
+            width: window.innerWidth < 768 ? "95%" : 420,
+maxHeight: "90vh",
+overflowY: "auto",
           }}>
             <h2>Staff Manager</h2>
 

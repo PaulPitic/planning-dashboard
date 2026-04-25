@@ -389,7 +389,13 @@ export default function App() {
       currentTeam: nextTeam,
     });
   }
+useEffect(() => {
+  const timer = setTimeout(() => {
+    saveShared();
+  }, 500);
 
+  return () => clearTimeout(timer);
+}, [aFlowTeamA, aFlowTeamB, aFlowRoleA, aFlowRoleB]);
   /* ===================================================== */
   if (!logged) {
     return (

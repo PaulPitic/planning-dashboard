@@ -721,10 +721,10 @@ export default function App() {
 
         {/* BOTTOM */}
 <div style={{
-  display: "grid",
-  gridTemplateColumns: "1fr",
+  display: "flex",
+  flexDirection: "column",
   gap: 6,
-  alignItems: "start",
+  alignItems: "stretch",
 }}>
           {/* PICKING */}
           <div style={cardStyle("#16a34a")}>

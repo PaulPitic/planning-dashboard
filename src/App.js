@@ -760,6 +760,7 @@ export default function App() {
           <div
   style={{
     ...cardStyle("#0ea5e9"),
+   display: "block"
   }}
 >
             <div style={{ fontSize: 12, fontWeight: "bold", marginBottom: 6 }}>

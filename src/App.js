@@ -1036,6 +1036,9 @@ export default function App() {
     </div>
   ))}
 </div>
+</div>
+
+{/* UNLOCK POPUP */}
 
       {/* UNLOCK POPUP */}
       {showUnlock && (

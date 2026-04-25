@@ -976,63 +976,65 @@ export default function App() {
   <div style={{ fontWeight: "bold", marginBottom: 6 }}>TEAM B</div>
 
   {aFlowTeamB.map((value, i) => (
-  <div
-    key={i}
-    style={{
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      gap: 4,
-      marginBottom: 4,
-    }}
-  >
-    <select
-      disabled={locked}
-      value={value}
-      onChange={(e) => {
-        const updated = [...aFlowTeamB];
-        updated[i] = e.target.value;
-        setAFlowTeamB(updated);
+    <div
+      key={i}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: 4,
+        marginBottom: 4,
       }}
-      style={{ padding: 4, fontSize: 11 }}
     >
-      <option value="">- Slot {i + 1} -</option>
+      <select
+        disabled={locked}
+        value={value}
+        onChange={(e) => {
+          const updated = [...aFlowTeamB];
+          updated[i] = e.target.value;
+          setAFlowTeamB(updated);
+        }}
+        style={{ padding: 4, fontSize: 11 }}
+      >
+        <option value="">- Slot {i + 1} -</option>
 
-      {[
-        "Dorobek Aleksandra",
-        "George Andrei (BHV)",
-        "Papan Antonio",
-        "Papan Costel",
-        "Arbos Killian",
-        "Godlewski Lukasz",
-        "Domenech Marc",
-        "Wizyn-Jastrzebski Mateusz",
-        "Gliszczynski-Mrozek Przemyslaw (BHV)",
-        "Kania Regina",
-        "Shushvalov Vladyslav",
-        "Vasyl Kytsak",
-        "Francisco Rafael Rodrigues André",
-        "Kyrou Nikolaos (BHV)",
-        "Macaay Shandell",
-        "Falhi Tarik",
-        "Gorzkiewicz Gerard (BHV)",
-      ].map((name) => (
-        <option key={name}>{name}</option>
-      ))}
-    </select>
+        {[
+          "Dorobek Aleksandra",
+          "George Andrei (BHV)",
+          "Papan Antonio",
+          "Papan Costel",
+          "Arbos Killian",
+          "Godlewski Lukasz",
+          "Domenech Marc",
+          "Wizyn-Jastrzebski Mateusz",
+          "Gliszczynski-Mrozek Przemyslaw (BHV)",
+          "Kania Regina",
+          "Shushvalov Vladyslav",
+          "Vasyl Kytsak",
+          "Francisco Rafael Rodrigues André",
+          "Kyrou Nikolaos (BHV)",
+          "Macaay Shandell",
+          "Falhi Tarik",
+          "Gorzkiewicz Gerard (BHV)",
+        ].map((name) => (
+          <option key={name} value={name}>
+            {name}
+          </option>
+        ))}
+      </select>
 
-    <input
-      disabled={locked}
-      value={aFlowRoleB[i]}
-      onChange={(e) => {
-        const updated = [...aFlowRoleB];
-        updated[i] = e.target.value;
-        setAFlowRoleB(updated);
-      }}
-      placeholder="Sup B-Flow / note"
-      style={{ padding: 4, fontSize: 11 }}
-    />
-  </div>
-))}
+      <input
+        disabled={locked}
+        value={aFlowRoleB[i]}
+        onChange={(e) => {
+          const updated = [...aFlowRoleB];
+          updated[i] = e.target.value;
+          setAFlowRoleB(updated);
+        }}
+        placeholder="Sup B-Flow / note"
+        style={{ padding: 4, fontSize: 11 }}
+      />
+    </div>
+  ))}
 </div>
 
       {/* UNLOCK POPUP */}

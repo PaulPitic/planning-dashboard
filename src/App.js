@@ -726,37 +726,8 @@ export default function App() {
   gap: 6,
   alignItems: "start",
 }}>
-          {/* PICKING */}
-          <div style={cardStyle("#16a34a")}>
-           <div
-  style={{
-    fontSize: 13,
-    fontWeight: "bold",
-    color: "#ffffff",
-    background: "#166534",
-    padding: "5px 8px",
-    borderRadius: 6,
-    marginBottom: 6,
-    textAlign: "center",
-    letterSpacing: 0.4,
-  }}
->
-  Picking Operations
-</div>
 
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3,1fr)",
-              gap: 4,
-              fontSize: 14,
-            }}>
-              {picking.map((name) => (
-                <div key={name}>{name}</div>
-              ))}
-            </div>
-          </div>
-
-          {/* NOT IN */}
+{/* NOT IN */}
           <div
   style={{
     ...cardStyle("#0ea5e9"),
@@ -791,8 +762,37 @@ export default function App() {
           </div>
         </div>
       </div>
+          {/* PICKING */}
+          <div style={cardStyle("#16a34a")}>
+           <div
+  style={{
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#ffffff",
+    background: "#166534",
+    padding: "5px 8px",
+    borderRadius: 6,
+    marginBottom: 6,
+    textAlign: "center",
+    letterSpacing: 0.4,
+  }}
+>
+  Picking Operations
+</div>
 
-      {/* RIGHT */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3,1fr)",
+              gap: 4,
+              fontSize: 14,
+            }}>
+              {picking.map((name) => (
+                <div key={name}>{name}</div>
+              ))}
+            </div>
+          </div>
+
+         {/* RIGHT */}
       <div style={{
         width: "25%",
         borderLeft: "1px solid #334155",

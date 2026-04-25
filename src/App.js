@@ -977,27 +977,11 @@ export default function App() {
     >
       <option value="">- Slot {i + 1} -</option>
 
-      {[
-        "Skitinas Edgaras",
-        "Gomez Gina",
-        "Gonzalez Jose",
-        "Andrushehenko Kyrylo",
-        "Sienkiewicz Mariusz",
-        "Simirska Marta",
-        "Ostapuk Oleksander",
-        "Shytyk Oleksandr",
-        "Goyke Przemyslaw",
-        "Tanasienko Serhii (BHV)",
-        "Vinkovic Velimir",
-        "Ciprian - ionut Iacob",
-        "Palun Igor",
-        "Kyrou Nikolaos (BHV)",
-        "Macaay Shandell",
-        "Falhi Tarik",
-        "Gorzkiewicz Gerard (BHV)",
-      ].map((name) => (
-        <option key={name}>{name}</option>
-      ))}
+     {(staff["A-FLOW A"] || []).map((name) => (
+  <option key={name} value={name}>
+    {name}
+  </option>
+))}
     </select>
 
     <input
@@ -1047,29 +1031,11 @@ export default function App() {
       >
         <option value="">- Slot {i + 1} -</option>
 
-        {[
-          "Dorobek Aleksandra",
-          "George Andrei (BHV)",
-          "Papan Antonio",
-          "Papan Costel",
-          "Arbos Killian",
-          "Godlewski Lukasz",
-          "Domenech Marc",
-          "Wizyn-Jastrzebski Mateusz",
-          "Gliszczynski-Mrozek Przemyslaw (BHV)",
-          "Kania Regina",
-          "Shushvalov Vladyslav",
-          "Vasyl Kytsak",
-          "Francisco Rafael Rodrigues André",
-          "Kyrou Nikolaos (BHV)",
-          "Macaay Shandell",
-          "Falhi Tarik",
-          "Gorzkiewicz Gerard (BHV)",
-        ].map((name) => (
-          <option key={name} value={name}>
-            {name}
-          </option>
-        ))}
+        {(staff["A-FLOW B"] || []).map((name) => (
+  <option key={name} value={name}>
+    {name}
+  </option>
+))}
       </select>
 
       <input

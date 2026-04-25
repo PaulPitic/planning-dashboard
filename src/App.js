@@ -317,14 +317,14 @@ export default function App() {
       const savedStaff = data.staff || {};
 
       setStaff({
-  Supervisors: [
+  supervisors: [
     ...new Set([
       ...(savedStaff.supervisors || []),
       ...defaultStaff.supervisors,
     ]),
   ],
 
-  Coordinators: [
+  coordinators: [
     ...new Set([
       ...(savedStaff.coordinators || []),
       ...defaultStaff.coordinators,
@@ -359,6 +359,9 @@ export default function App() {
     ]),
   ],
 });
+
+setLocked(data.locked ?? true);
+setTeam(data.currentTeam || "Team A");
 
   return () => unsub();
 }, []);

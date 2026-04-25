@@ -458,6 +458,44 @@ export default function App() {
   ===================================================== */
   function renderCard(item, color, optionsList) {
     const values = safeArray(teamData[item.key], item.slots);
+     if (item.key === "notin") {
+  return (
+    <div key={item.key} style={cardStyle(color)}>
+      <div style={{ fontSize: 12, fontWeight: "bold", marginBottom: 4 }}>
+        {item.label}
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3,1fr)",
+          gap: 4,
+        }}
+      >
+        {values.map((v, i) => (
+          <select
+            key={i}
+            disabled={locked}
+            value={v}
+            onChange={(e) =>
+              assign(item.key, i, e.target.value, item.slots)
+            }
+            style={{
+              width: "100%",
+              padding: 4,
+              fontSize: 11,
+            }}
+          >
+            <option value="">-{i + 1}-</option>
+            {optionsList.map((n) => (
+              <option key={n}>{n}</option>
+            ))}
+          </select>
+        ))}
+      </div>
+    </div>
+  );
+}
 
     if (item.split) {
       const cover = safeArray(

@@ -73,7 +73,6 @@ const areas = [
       { key: "doc", label: "Document Applier", slots: 2, split: true },
       { key: "pal1", label: "Palletiser A", slots: 3, split: true },
       { key: "pal2", label: "Palletiser B", slots: 3, split: true },
-      { key: "notin", label: "Not In", slots: 12 },
       { key: "drop", label: "Trolley Dropper", slots: 1, split: true },
       { key: "box", label: "Box Filler", slots: 1, split: true },
     ],
@@ -771,6 +770,53 @@ export default function App() {
         ))}
 
         {/* BOTTOM */}
+{/* NOT IN */}
+<div style={cardStyle("#0ea5e9")}>
+  <div
+    style={{
+      fontSize: 13,
+      fontWeight: "bold",
+      color: "#ffffff",
+      background: "#0284c7",
+      padding: "5px 8px",
+      borderRadius: 6,
+      marginBottom: 6,
+      textAlign: "center",
+      letterSpacing: 0.4,
+    }}
+  >
+    Not In
+  </div>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(6,1fr)",
+      gap: 4,
+    }}
+  >
+    {safeArray(teamData.notin, 12).map((v, i) => (
+      <select
+        key={i}
+        disabled={locked}
+        value={v}
+        onChange={(e) =>
+          assign("notin", i, e.target.value, 12)
+        }
+        style={{
+          width: "100%",
+          padding: 4,
+          fontSize: 11,
+        }}
+      >
+        <option value="">-{i + 1}-</option>
+        {allPeople.map((n) => (
+          <option key={n}>{n}</option>
+        ))}
+      </select>
+    ))}
+  </div>
+</div>
 <div style={{
   display: "grid",
   gridTemplateColumns: "1fr",

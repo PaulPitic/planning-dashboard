@@ -858,18 +858,105 @@ export default function App() {
       </div>
 
       {/* RIGHT */}
-      <div style={{
-        width: "25%",
-        borderLeft: "1px solid #334155",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        color: "#64748b",
-        fontWeight: "bold",
-        fontSize: 20,
-      }}>
-        KPI PANEL
+<div
+  style={{
+    width: "25%",
+    borderLeft: "1px solid #334155",
+    padding: 10,
+    overflowY: "auto",
+    color: "#e2e8f0",
+  }}
+>
+  {/* HEADER */}
+  <div
+    style={{
+      background: "#0f766e",
+      padding: "8px",
+      borderRadius: 8,
+      textAlign: "center",
+      fontWeight: "bold",
+      fontSize: 20,
+      marginBottom: 10,
+    }}
+  >
+    A-FLOW
+  </div>
+
+  {/* BUTTONS */}
+  <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
+    <button style={{ flex: 1 }}>Staff Management</button>
+    <button style={{ flex: 1 }}>Lock</button>
+  </div>
+
+  {/* TEAM A */}
+  <div
+    style={{
+      background: "#1e293b",
+      padding: 8,
+      borderRadius: 8,
+      marginBottom: 10,
+    }}
+  >
+    <div style={{ fontWeight: "bold", marginBottom: 6 }}>TEAM A</div>
+    {[
+      "Skitinas Edgaras",
+      "Gomez Gina",
+      "Gonzalez Jose",
+      "Andrushehenko Kyrylo",
+      "Sienkiewicz Mariusz",
+      "Simirska Marta",
+      "Ostapuk Oleksander",
+      "Shytyk Oleksandr",
+      "Goyke Przemyslaw",
+      "Tanasienko Serhii (BHV)",
+      "Vinkovic Velimir",
+      "Ciprian - ionut Iacob",
+      "Palun Igor",
+      "Kyrou Nikolaos (BHV)",
+      "Macaay Shandell",
+      "Falhi Tarik",
+      "Gorzkiewicz Gerard (BHV)",
+    ].map((name) => (
+      <div key={name} style={{ fontSize: 12, marginBottom: 3 }}>
+        {name}
       </div>
+    ))}
+  </div>
+
+  {/* TEAM B */}
+  <div
+    style={{
+      background: "#1e293b",
+      padding: 8,
+      borderRadius: 8,
+    }}
+  >
+    <div style={{ fontWeight: "bold", marginBottom: 6 }}>TEAM B</div>
+    {[
+      "Dorobek Aleksandra",
+      "George Andrei (BHV)",
+      "Papan Antonio",
+      "Papan Costel",
+      "Arbos Killian",
+      "Godlewski Lukasz",
+      "Domenech Marc",
+      "Wizyn-Jastrzebski Mateusz",
+      "Gliszczynski-Mrozek Przemyslaw (BHV)",
+      "Kania Regina",
+      "Shushvalov Vladyslav",
+      "Vasyl Kytsak",
+      "Francisco Rafael Rodrigues André",
+      "Kyrou Nikolaos (BHV)",
+      "Macaay Shandell",
+      "Falhi Tarik",
+      "Gorzkiewicz Gerard (BHV)",
+    ].map((name) => (
+      <div key={name} style={{ fontSize: 12, marginBottom: 3 }}>
+        {name}
+      </div>
+    ))}
+  </div>
+</div>
 
       {/* UNLOCK POPUP */}
       {showUnlock && (

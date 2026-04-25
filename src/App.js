@@ -1214,7 +1214,7 @@ export default function App() {
               overflowY: "auto",
               marginBottom: 10,
             }}>
-              {staff[staffCat].map((name) => (
+             {(staff[staffCat] || []).map((name) => (
                 <div
                   key={name}
                   style={{

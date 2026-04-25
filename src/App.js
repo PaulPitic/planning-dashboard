@@ -770,23 +770,6 @@ export default function App() {
         ))}
 
         {/* BOTTOM */}
-{/* NOT IN */}
-<div style={cardStyle("#0ea5e9")}>
-  <div
-    style={{
-      fontSize: 13,
-      fontWeight: "bold",
-      color: "#ffffff",
-      background: "#0284c7",
-      padding: "5px 8px",
-      borderRadius: 6,
-      marginBottom: 6,
-      textAlign: "center",
-      letterSpacing: 0.4,
-    }}
-  >
-    Not In
-  </div>
 
   <div
     style={{
@@ -852,7 +835,23 @@ export default function App() {
               ))}
             </div>
           </div>
-
+{/* NOT IN */}
+<div style={cardStyle("#0ea5e9")}>
+  <div
+    style={{
+      fontSize: 13,
+      fontWeight: "bold",
+      color: "#ffffff",
+      background: "#0284c7",
+      padding: "5px 8px",
+      borderRadius: 6,
+      marginBottom: 6,
+      textAlign: "center",
+      letterSpacing: 0.4,
+    }}
+  >
+    Not In
+  </div>
           
         </div>
       </div>

@@ -802,7 +802,11 @@ useEffect(() => {
 
   <button
     style={{ ...buttonStyle, background: "#22c55e" }}
-    onClick={() => saveShared()}
+    onClick={async () => {
+  setSaveStatus("Saving...");
+  await saveShared();
+  setSaveStatus("Saved");
+}}
   >
     Apply
   </button>

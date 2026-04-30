@@ -375,6 +375,9 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
       setLocked(data.locked ?? true);
       setTeam(data.currentTeam || "Team A");
 
+      setOpenAFlow(data.openAFlow ?? true);
+      setOpenNotIn(data.openNotIn ?? false);
+
       setAFlowTeamA(data.aFlowTeamA || Array(15).fill(""));
       setAFlowTeamB(data.aFlowTeamB || Array(15).fill(""));
       setAFlowRoleA(data.aFlowRoleA || Array(15).fill(""));
@@ -416,6 +419,9 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
       aFlowTeamB,
       aFlowRoleA,
       aFlowRoleB,
+
+      openAFlow,
+      openNotIn,
     },
     { merge: true } // ✅ prevents overwriting
   );

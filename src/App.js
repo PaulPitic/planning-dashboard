@@ -1063,24 +1063,7 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
     Staff Management
   </button>
 
-  <button
-    onClick={() => setLocked(!locked)}
-    style={{
-      ...buttonStyle,
-      flex: 1,
-      background: locked ? "#dc2626" : "#16a34a",
-      color: "#ffffff",
-      fontWeight: "bold",
-      border: locked
-        ? "1px solid #f87171"
-        : "1px solid #4ade80",
-      boxShadow: locked
-        ? "0 0 10px rgba(220,38,38,.35)"
-        : "0 0 10px rgba(22,163,74,.35)",
-    }}
-  >
-    {locked ? "🔒 Locked" : "🔓 Unlocked"}
-  </button>
+ 
 </div>
 
   {/* TEAM A */}

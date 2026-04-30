@@ -473,16 +473,11 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
 />
 
         <button
-          style={{ ...buttonStyle, background: "#2563eb" }}
-          onClick={() => {
-            if (passwordInput === PASSWORD) {
-              localStorage.setItem("auth", "true");
-              setLogged(true);
-            }
-          }}
-        >
-          Login
-        </button>
+  style={{ ...buttonStyle, background: "#2563eb" }}
+  onClick={handleLogin}
+>
+  Login
+</button>
       </div>
     );
   }

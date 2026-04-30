@@ -443,11 +443,25 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
         <h2>🔐 Dashboard Login</h2>
 
         <input
-          type="password"
-          value={passwordInput}
-          onChange={(e) => setPasswordInput(e.target.value)}
-          style={{ padding: 10, borderRadius: 8 }}
-        />
+  type="password"
+  value={unlockInput}
+  onChange={(e) => setUnlockInput(e.target.value)}
+  onKeyDown={async (e) => {
+    if (e.key === "Enter") {
+      if (unlockInput === PASSWORD) {
+        setLocked(false);
+        setShowUnlock(false);
+        setUnlockInput("");
+        await saveShared(boardData, staff, false, team);
+      }
+    }
+  }}
+  style={{
+    width: "100%",
+    padding: 10,
+    marginBottom: 10,
+  }}
+/>
 
         <button
           style={{ ...buttonStyle, background: "#2563eb" }}

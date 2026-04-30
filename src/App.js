@@ -306,8 +306,7 @@ export default function App() {
    const [saveStatus, setSaveStatus] = useState("Saved");
 
   /* ===================================================== */
-
-   useEffect(() => {
+useEffect(() => {
   const ref = doc(db, "dashboard", "shared");
 
   const unsub = onSnapshot(ref, async (snap) => {
@@ -318,7 +317,6 @@ export default function App() {
 
       const savedStaff = data.staff || {};
 
-      // ✅ STAFF (MUST BE INSIDE)
       setStaff({
         supervisors: [
           ...new Set([
@@ -326,35 +324,30 @@ export default function App() {
             ...defaultStaff.supervisors,
           ]),
         ],
-
         coordinators: [
           ...new Set([
             ...(savedStaff.coordinators || []),
             ...defaultStaff.coordinators,
           ]),
         ],
-
         "Team A": [
           ...new Set([
             ...(savedStaff["Team A"] || []),
             ...defaultStaff["Team A"],
           ]),
         ],
-
         "Team B": [
           ...new Set([
             ...(savedStaff["Team B"] || []),
             ...defaultStaff["Team B"],
           ]),
         ],
-
         "A-FLOW A": [
           ...new Set([
             ...(savedStaff["A-FLOW A"] || []),
             ...defaultStaff["A-FLOW A"],
           ]),
         ],
-
         "A-FLOW B": [
           ...new Set([
             ...(savedStaff["A-FLOW B"] || []),
@@ -366,12 +359,10 @@ export default function App() {
       setLocked(data.locked ?? true);
       setTeam(data.currentTeam || "Team A");
 
-      // ✅ A-FLOW LOAD
       setAFlowTeamA(data.aFlowTeamA || Array(15).fill(""));
       setAFlowTeamB(data.aFlowTeamB || Array(15).fill(""));
       setAFlowRoleA(data.aFlowRoleA || Array(15).fill(""));
       setAFlowRoleB(data.aFlowRoleB || Array(15).fill(""));
-
     } else {
       await setDoc(ref, {
         board: createBoard(),
@@ -388,6 +379,7 @@ export default function App() {
 
   return () => unsub();
 }, []);
+   
 
    async function saveShared(
   nextBoard = boardData,

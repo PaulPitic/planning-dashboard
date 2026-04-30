@@ -889,134 +889,102 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
 
         {/* BOTTOM */}
 {/* NOT IN */}
-<div style={cardStyle("#0ea5e9")}>
-  {/* HEADER */}
-  <div
-    onClick={() => setOpenNotIn(!openNotIn)}
-    style={{
-      fontSize: 13,
-      fontWeight: "bold",
-      color: "#ffffff",
-      background: "#0284c7",
-      padding: "6px 8px",
-      borderRadius: 6,
-      marginBottom: 6,
-      cursor: "pointer",
-      display: "flex",
-      justifyContent: "space-between",
-    }}
-  >
-    <span>Not In</span>
-    <span>{openNotIn ? "▼" : "▶"}</span>
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gap: 6,
+    alignItems: "start",
+  }}
+>
+  {/* NOT IN */}
+  <div style={cardStyle("#0ea5e9")}>
+    <div
+      onClick={() => setOpenNotIn(!openNotIn)}
+      style={{
+        fontSize: 13,
+        fontWeight: "bold",
+        color: "#ffffff",
+        background: "#0284c7",
+        padding: "6px 8px",
+        borderRadius: 6,
+        marginBottom: 6,
+        cursor: "pointer",
+        display: "flex",
+        justifyContent: "space-between",
+      }}
+    >
+      <span>Not In</span>
+      <span>{openNotIn ? "▼" : "▶"}</span>
+    </div>
+
+    {openNotIn && (
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            window.innerWidth < 768
+              ? "repeat(2,1fr)"
+              : "repeat(6,1fr)",
+          gap: 4,
+        }}
+      >
+        {safeArray(teamData.notin, 12).map((v, i) => (
+          <select
+            key={i}
+            disabled={locked}
+            value={v}
+            onChange={(e) =>
+              assign("notin", i, e.target.value, 12)
+            }
+            style={{
+              width: "100%",
+              padding: 4,
+              fontSize: 11,
+            }}
+          >
+            <option value="">-{i + 1}-</option>
+            {allPeople.map((n) => (
+              <option key={n}>{n}</option>
+            ))}
+          </select>
+        ))}
+      </div>
+    )}
   </div>
 
-  {/* CONTENT */}
-  {openNotIn && (
+  {/* PICKING */}
+  <div style={cardStyle("#16a34a")}>
+    <div
+      style={{
+        fontSize: 13,
+        fontWeight: "bold",
+        color: "#ffffff",
+        background: "#166534",
+        padding: "5px 8px",
+        borderRadius: 6,
+        marginBottom: 6,
+        textAlign: "center",
+        letterSpacing: 0.4,
+      }}
+    >
+      Picking Operations
+    </div>
+
     <div
       style={{
         display: "grid",
-        gridTemplateColumns:
-          window.innerWidth < 768
-            ? "repeat(2,1fr)"
-            : "repeat(6,1fr)",
+        gridTemplateColumns: "repeat(3,1fr)",
         gap: 4,
+        fontSize: 14,
       }}
     >
-      {safeArray(teamData.notin, 12).map((v, i) => (
-        <select
-          key={i}
-          disabled={locked}
-          value={v}
-          onChange={(e) =>
-            assign("notin", i, e.target.value, 12)
-          }
-          style={{
-            width: "100%",
-            padding: 4,
-            fontSize: 11,
-          }}
-        >
-          <option value="">-{i + 1}-</option>
-          {allPeople.map((n) => (
-            <option key={n}>{n}</option>
-          ))}
-        </select>
+      {picking.map((name) => (
+        <div key={name}>{name}</div>
       ))}
     </div>
-  )}
-</div>
-
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns:
-  window.innerWidth < 768
-    ? "repeat(2,1fr)"
-    : "repeat(6,1fr)",
-      gap: 4,
-    }}
-  >
-    {safeArray(teamData.notin, 12).map((v, i) => (
-      <select
-        key={i}
-        disabled={locked}
-        value={v}
-        onChange={(e) =>
-          assign("notin", i, e.target.value, 12)
-        }
-        style={{
-          width: "100%",
-          padding: 4,
-          fontSize: 11,
-        }}
-      >
-        <option value="">-{i + 1}-</option>
-        {allPeople.map((n) => (
-          <option key={n}>{n}</option>
-        ))}
-      </select>
-    ))}
   </div>
 </div>
-<div style={{
-  display: "grid",
-  gridTemplateColumns: "1fr",
-  gap: 6,
-  alignItems: "start",
-}}>
-          {/* PICKING */}
-          <div style={cardStyle("#16a34a")}>
-           <div
-  style={{
-    fontSize: 13,
-    fontWeight: "bold",
-    color: "#ffffff",
-    background: "#166534",
-    padding: "5px 8px",
-    borderRadius: 6,
-    marginBottom: 6,
-    textAlign: "center",
-    letterSpacing: 0.4,
-  }}
->
-  Picking Operations
-</div>
-
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3,1fr)",
-              gap: 4,
-              fontSize: 14,
-            }}>
-              {picking.map((name) => (
-                <div key={name}>{name}</div>
-              ))}
-            </div>
-          </div>
-
-          
-        </div>
-      </div>
 
       {/* RIGHT */}
 <div

@@ -327,6 +327,8 @@ export default function App() {
    const [openFlowTeam, setOpenFlowTeam] = useState("A");
    const [saveStatus, setSaveStatus] = useState("Saved");
 
+   const [openNotIn, setOpenNotIn] = useState(false);
+
   /* ===================================================== */
 useEffect(() => {
   const ref = doc(db, "dashboard", "shared");
@@ -888,21 +890,61 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
         {/* BOTTOM */}
 {/* NOT IN */}
 <div style={cardStyle("#0ea5e9")}>
+  {/* HEADER */}
   <div
+    onClick={() => setOpenNotIn(!openNotIn)}
     style={{
       fontSize: 13,
       fontWeight: "bold",
       color: "#ffffff",
       background: "#0284c7",
-      padding: "5px 8px",
+      padding: "6px 8px",
       borderRadius: 6,
       marginBottom: 6,
-      textAlign: "center",
-      letterSpacing: 0.4,
+      cursor: "pointer",
+      display: "flex",
+      justifyContent: "space-between",
     }}
   >
-    Not In
+    <span>Not In</span>
+    <span>{openNotIn ? "▼" : "▶"}</span>
   </div>
+
+  {/* CONTENT */}
+  {openNotIn && (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns:
+          window.innerWidth < 768
+            ? "repeat(2,1fr)"
+            : "repeat(6,1fr)",
+        gap: 4,
+      }}
+    >
+      {safeArray(teamData.notin, 12).map((v, i) => (
+        <select
+          key={i}
+          disabled={locked}
+          value={v}
+          onChange={(e) =>
+            assign("notin", i, e.target.value, 12)
+          }
+          style={{
+            width: "100%",
+            padding: 4,
+            fontSize: 11,
+          }}
+        >
+          <option value="">-{i + 1}-</option>
+          {allPeople.map((n) => (
+            <option key={n}>{n}</option>
+          ))}
+        </select>
+      ))}
+    </div>
+  )}
+</div>
 
   <div
     style={{

@@ -432,8 +432,6 @@ useEffect(() => {
   aFlowRoleB,
 ]);
 
-  return () => clearTimeout(timer);
-}, [aFlowTeamA, aFlowTeamB, aFlowRoleA, aFlowRoleB]);
   /* ===================================================== */
   if (!logged) {
     return (

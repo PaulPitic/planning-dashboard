@@ -321,18 +321,9 @@ useEffect(() => {
       const savedStaff = data.staff || {};
 
       setStaff({
-        supervisors: [
-          ...new Set([
-            ...(savedStaff.supervisors || []),
-            ...defaultStaff.supervisors,
-          ]),
-        ],
-        coordinators: [
-          ...new Set([
-            ...(savedStaff.coordinators || []),
-            ...defaultStaff.coordinators,
-          ]),
-        ],
+        supervisors: keepOnlyBHV(savedStaff.supervisors || []),
+
+coordinators: keepOnlyBHV(savedStaff.coordinators || []),
         "Team A": [
           ...new Set([
             ...(savedStaff["Team A"] || []),

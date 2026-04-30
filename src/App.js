@@ -1252,15 +1252,21 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
       )}
 
       {/* STAFF POPUP */}
-      {showStaff && (
-        <div style={{
-          position: "fixed",
-          inset: 0,
-          background: "transparent",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
+        <div
+  style={{
+    position: "fixed",
+    top: 0,
+    right: showStaff ? 0 : "-420px",
+    width: 420,
+    height: "100vh",
+    background: "#1e293b",
+    transition: "right 0.3s ease",
+    zIndex: 1000,
+    padding: 20,
+    overflowY: "auto",
+    boxShadow: "-10px 0 30px rgba(0,0,0,0.5)",
+  }}
+>
           <div style={{
             background: "#1e293b",
             padding: 20,

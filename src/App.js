@@ -328,6 +328,7 @@ export default function App() {
    const [saveStatus, setSaveStatus] = useState("Saved");
 
    const [openNotIn, setOpenNotIn] = useState(false);
+   const [openAFlow, setOpenAFlow] = useState(true);
 
   /* ===================================================== */
 useEffect(() => {
@@ -989,16 +990,43 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
       {/* RIGHT */}
 <div
   style={{
-    width: window.innerWidth < 768 ? "100%" : "25%",
-minHeight: window.innerWidth < 768 ? "auto" : "100vh",
-borderLeft: window.innerWidth < 768 ? "none" : "1px solid #334155",
-borderTop: window.innerWidth < 768 ? "1px solid #334155" : "none",
-    borderLeft: "1px solid #334155",
-    padding: 10,
-    overflowY: "auto",
+    width: openAFlow
+      ? (window.innerWidth < 768 ? "100%" : "25%")
+      : "40px",
+
+    minHeight: window.innerWidth < 768 ? "auto" : "100vh",
+
+    borderLeft: window.innerWidth < 768 ? "none" : "1px solid #334155",
+    borderTop: window.innerWidth < 768 ? "1px solid #334155" : "none",
+
+    padding: openAFlow ? 10 : 4,
+    overflow: "hidden",
     color: "#e2e8f0",
+
+    transition: "all 0.3s ease",
+    position: "relative",
   }}
 >
+ <div
+    onClick={() => setOpenAFlow(!openAFlow)}
+    style={{
+      position: "absolute",
+      top: 10,
+      left: -18,
+      width: 36,
+      height: 36,
+      background: "#0f766e",
+      borderRadius: "50%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: "pointer",
+      fontWeight: "bold",
+      zIndex: 10,
+    }}
+  >
+    {openAFlow ? "➤" : "◀"}
+  </div>
   {/* HEADER */}
   <div
     style={{

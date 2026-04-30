@@ -1205,13 +1205,14 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
       {/* UNLOCK POPUP */}
       {showUnlock && (
         <div style={{
-          position: "fixed",
-          inset: 0,
-          background: "rgba(0,0,0,.7)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
+  position: "fixed",
+  inset: 0,
+  background: "transparent",
+  backdropFilter: "blur(2px)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+}}>
           <div style={{
             background: "#1e293b",
             padding: 20,

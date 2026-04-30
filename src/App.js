@@ -407,25 +407,6 @@ useEffect(() => {
     { merge: true } // ✅ prevents overwriting
   );
 }
-useEffect(() => {
-  setSaveStatus("Saving...");
-
-  const timer = setTimeout(async () => {
-    await saveShared();
-    setSaveStatus("Saved");
-  }, 500);
-
-  return () => clearTimeout(timer);
-}, [
-  boardData,
-  staff,
-  locked,
-  team,
-  aFlowTeamA,
-  aFlowTeamB,
-  aFlowRoleA,
-  aFlowRoleB,
-]);
 
   /* ===================================================== */
   if (!logged) {

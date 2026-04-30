@@ -985,7 +985,7 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
     </div>
   </div>
 </div>
-
+</div>
       {/* RIGHT */}
 <div
   style={{

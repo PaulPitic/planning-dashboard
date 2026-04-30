@@ -100,17 +100,20 @@ const areas = [
 ===================================================== */
 const defaultStaff = {
   supervisors: [
-    "Marciano Dekker",
-    "Jan Schulz",
-    "Cyrille Berkelaar",
-    "Anna Cetera",
+    "Marciano Dekker (BHV)",
+    "Jan Schulz (BHV)",
+    "Cyrille Berkelaar (BHV)",
+    "Anna Cetera (BHV)",
+    "Brahim Yousef (BHV)",
   ],
 
   coordinators: [
-    "Kucharska Wioleta",
-    "Janulevicius Antanas",
-    "Sotirios Sampaliotis",
-    "Pitic Paul-Ioan",
+    "Kucharska Wioleta (BHV)",
+    "Janulevicius Antanas (BHV)",
+    "Sotirios Sampaliotis (BHV)",
+    "Pitic Paul-Ioan (BHV)",
+    "Zielecka Kasia (BHV)",
+    "Klimov Anton (BHV)",
   ],
 
   "Team A": [
@@ -142,7 +145,7 @@ const defaultStaff = {
     "Socha Ewelina",
     "Svistula Oleksii",
     "Tsioumas Panagiotis",
-    "Varava Sofiia",
+    "Varava Sofiia (BHV)",
     "Veer v.d Kees",
     "Vilkhova Alina",
     "Zan Ewa",
@@ -180,7 +183,7 @@ const defaultStaff = {
     "Rodrigues Joao",
     "Shavb Yelyzaveta",
     "Siekierko Samanta",
-    "Slavkovsky Martin (trainer)",
+    "Slavkovsky Martin (Trainer/BHV)",
     "Socol Emmanuel",
     "Stipinas Aurimas",
     "Stryzh Anastasia",

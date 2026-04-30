@@ -303,6 +303,7 @@ export default function App() {
   const [aFlowRoleB, setAFlowRoleB] = useState(Array(15).fill(""));
 
    const [openFlowTeam, setOpenFlowTeam] = useState("A");
+   const [saveStatus, setSaveStatus] = useState("Saved");
 
   /* ===================================================== */
 
@@ -412,9 +413,24 @@ export default function App() {
   );
 }
 useEffect(() => {
-  const timer = setTimeout(() => {
-    saveShared();
+  setSaveStatus("Saving...");
+
+  const timer = setTimeout(async () => {
+    await saveShared();
+    setSaveStatus("Saved");
   }, 500);
+
+  return () => clearTimeout(timer);
+}, [
+  boardData,
+  staff,
+  locked,
+  team,
+  aFlowTeamA,
+  aFlowTeamB,
+  aFlowRoleA,
+  aFlowRoleB,
+]);
 
   return () => clearTimeout(timer);
 }, [aFlowTeamA, aFlowTeamB, aFlowRoleA, aFlowRoleB]);
@@ -778,52 +794,66 @@ useEffect(() => {
 
         {/* TOP */}
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 6 }}>
-          {teams.map((t) => (
-            <button
-              key={t}
-              style={{
-                ...buttonStyle,
-                background: team === t ? "#2563eb" : "#334155",
-              }}
-              onClick={async () => {
-                setTeam(t);
-                await saveShared(boardData, staff, locked, t);
-              }}
-            >
-              {t}
-            </button>
-          ))}
+  {teams.map((t) => (
+    <button
+      key={t}
+      style={{
+        ...buttonStyle,
+        background: team === t ? "#2563eb" : "#334155",
+      }}
+      onClick={async () => {
+        setTeam(t);
+        await saveShared(boardData, staff, locked, t);
+      }}
+    >
+      {t}
+    </button>
+  ))}
 
-          <button
-            style={{
-              ...buttonStyle,
-              background: locked ? "#dc2626" : "#16a34a",
-            }}
-            onClick={async () => {
-              if (locked) setShowUnlock(true);
-              else {
-                setLocked(true);
-                await saveShared(boardData, staff, true, team);
-              }
-            }}
-          >
-            {locked ? "🔒" : "🔓"}
-          </button>
+  <button
+    style={{
+      ...buttonStyle,
+      background: locked ? "#dc2626" : "#16a34a",
+    }}
+    onClick={async () => {
+      if (locked) setShowUnlock(true);
+      else {
+        setLocked(true);
+        await saveShared(boardData, staff, true, team);
+      }
+    }}
+  >
+    {locked ? "🔒" : "🔓"}
+  </button>
 
-          <button
-            style={{ ...buttonStyle, background: "#22c55e" }}
-            onClick={() => saveShared()}
-          >
-            Apply
-          </button>
+  <button
+    style={{ ...buttonStyle, background: "#22c55e" }}
+    onClick={() => saveShared()}
+  >
+    Apply
+  </button>
 
-          <button
-            style={{ ...buttonStyle, background: "#7c3aed" }}
-            onClick={() => setShowStaff(true)}
-          >
-            Staff
-          </button>
-        </div>
+  <button
+    style={{ ...buttonStyle, background: "#7c3aed" }}
+    onClick={() => setShowStaff(true)}
+  >
+    Staff
+  </button>
+
+  {/* ✅ SAVE STATUS */}
+  <div
+    style={{
+      marginLeft: "auto",
+      fontSize: 12,
+      fontWeight: "bold",
+      color: saveStatus === "Saving..." ? "#facc15" : "#22c55e",
+      display: "flex",
+      alignItems: "center",
+    }}
+  >
+    {saveStatus === "Saving..." ? "⏳ Saving..." : "✔ Saved"}
+  </div>
+</div>
 
         {/* LEADERSHIP */}
         <div style={{

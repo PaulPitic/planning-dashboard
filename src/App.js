@@ -301,7 +301,7 @@ function keepOnlyBHV(arr) {
 ===================================================== */
 export default function App() {
   const [logged, setLogged] = useState(
-    localStorage.getItem("auth") === "true"
+  localStorage.getItem("auth") === "true"
   );
   const [passwordInput, setPasswordInput] = useState("");
 
@@ -329,6 +329,17 @@ export default function App() {
 
    const [openNotIn, setOpenNotIn] = useState(false);
    const [openAFlow, setOpenAFlow] = useState(true);
+
+   const handleUnlock = async () => {
+  if (unlockInput === PASSWORD) {
+    setLocked(false);
+    setShowUnlock(false);
+    setUnlockInput("");
+    await saveShared(boardData, staff, false, team);
+  } else {
+    alert("Wrong password");
+  }
+};
 
   /* ===================================================== */
 useEffect(() => {
@@ -442,25 +453,23 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
       }}>
         <h2>🔐 Dashboard Login</h2>
 
-        <input
+     <input
   type="password"
-  value={unlockInput}
-  onChange={(e) => setUnlockInput(e.target.value)}
-  onKeyDown={async (e) => {
+  value={passwordInput}
+  onChange={(e) => setPasswordInput(e.target.value)}
+  onKeyDown={(e) => {
     if (e.key === "Enter") {
-      if (unlockInput === PASSWORD) {
-        setLocked(false);
-        setShowUnlock(false);
-        setUnlockInput("");
-        await saveShared(boardData, staff, false, team);
+      e.preventDefault();
+      if (passwordInput === PASSWORD) {
+        localStorage.setItem("auth", "true");
+        setLogged(true);
+      } else {
+        alert("Wrong password");
       }
     }
   }}
-  style={{
-    width: "100%",
-    padding: 10,
-    marginBottom: 10,
-  }}
+  autoFocus
+  style={{ padding: 10, borderRadius: 8 }}
 />
 
         <button

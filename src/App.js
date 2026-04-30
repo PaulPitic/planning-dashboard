@@ -1013,27 +1013,24 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
   position: "relative",
 }}
 >
- <div
-    onClick={() => setOpenAFlow(!openAFlow)}
-    style={{
-  position: "absolute",
-  top: 10,
-  right: openAFlow ? 10 : -40, // 🔥 key fix
-  width: 36,
-  height: 36,
-  background: "#0f766e",
-  borderRadius: "50%",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  cursor: "pointer",
-  fontWeight: "bold",
-  zIndex: 20,
-  transition: "all 0.3s ease",
-}}
-  >
-    {openAFlow ? "➤" : "◀"}
-  </div>
+<div
+  onClick={() => setOpenAFlow(!openAFlow)}
+  style={{
+    position: "fixed",
+    top: 80,
+    right: 10,
+    background: "#0f766e",
+    color: "#fff",
+    padding: "10px 12px",
+    borderRadius: 10,
+    cursor: "pointer",
+    fontWeight: "bold",
+    zIndex: 999,
+    boxShadow: "0 0 10px rgba(0,0,0,0.4)",
+  }}
+>
+  {openAFlow ? "➤ Hide A-FLOW" : "◀ Show A-FLOW"}
+</div>
   {/* HEADER */}
   <div
     style={{

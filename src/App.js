@@ -277,6 +277,25 @@ function safeArray(value, size) {
   return Array(size).fill("");
 }
 
+// ✅ ADD HERE
+function normalize(name) {
+  return name.replace(/\s*\(.*?\)/, "").trim();
+}
+
+function keepOnlyBHV(arr) {
+  const map = new Map();
+
+  arr.forEach((name) => {
+    const key = normalize(name);
+
+    if (name.includes("(BHV)")) {
+      map.set(key, name);
+    }
+  });
+
+  return Array.from(map.values());
+}
+
 /* =====================================================
    APP
 ===================================================== */

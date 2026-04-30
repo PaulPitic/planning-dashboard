@@ -827,22 +827,6 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
   ))}
 
   <button
-    style={{
-      ...buttonStyle,
-      background: locked ? "#dc2626" : "#16a34a",
-    }}
-    onClick={async () => {
-      if (locked) setShowUnlock(true);
-      else {
-        setLocked(true);
-        await saveShared(boardData, staff, true, team);
-      }
-    }}
-  >
-    {locked ? "🔒" : "🔓"}
-  </button>
-
-  <button
     style={{ ...buttonStyle, background: "#22c55e" }}
     onClick={async () => {
   setSaveStatus("Saving...");

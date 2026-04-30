@@ -1256,7 +1256,7 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
         <div style={{
           position: "fixed",
           inset: 0,
-          background: "rgba(0,0,0,.7)",
+          background: "transparent",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",

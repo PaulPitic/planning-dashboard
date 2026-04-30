@@ -317,6 +317,7 @@ export default function App() {
 
       const savedStaff = data.staff || {};
 
+      // ✅ STAFF (MUST BE INSIDE)
       setStaff({
         supervisors: [
           ...new Set([
@@ -363,12 +364,23 @@ export default function App() {
 
       setLocked(data.locked ?? true);
       setTeam(data.currentTeam || "Team A");
+
+      // ✅ A-FLOW LOAD
+      setAFlowTeamA(data.aFlowTeamA || Array(15).fill(""));
+      setAFlowTeamB(data.aFlowTeamB || Array(15).fill(""));
+      setAFlowRoleA(data.aFlowRoleA || Array(15).fill(""));
+      setAFlowRoleB(data.aFlowRoleB || Array(15).fill(""));
+
     } else {
       await setDoc(ref, {
         board: createBoard(),
         staff: defaultStaff,
         locked: true,
         currentTeam: "Team A",
+        aFlowTeamA: Array(15).fill(""),
+        aFlowTeamB: Array(15).fill(""),
+        aFlowRoleA: Array(15).fill(""),
+        aFlowRoleB: Array(15).fill(""),
       });
     }
   });
@@ -376,19 +388,29 @@ export default function App() {
   return () => unsub();
 }, []);
 
-  async function saveShared(
-    nextBoard = boardData,
-    nextStaff = staff,
-    nextLocked = locked,
-    nextTeam = team
-  ) {
-    await setDoc(doc(db, "dashboard", "shared"), {
+   async function saveShared(
+  nextBoard = boardData,
+  nextStaff = staff,
+  nextLocked = locked,
+  nextTeam = team
+) {
+  await setDoc(
+    doc(db, "dashboard", "shared"),
+    {
       board: nextBoard,
       staff: nextStaff,
       locked: nextLocked,
       currentTeam: nextTeam,
-    });
-  }
+
+      // ✅ ADD THIS
+      aFlowTeamA,
+      aFlowTeamB,
+      aFlowRoleA,
+      aFlowRoleB,
+    },
+    { merge: true } // ✅ prevents overwriting
+  );
+}
 useEffect(() => {
   const timer = setTimeout(() => {
     saveShared();

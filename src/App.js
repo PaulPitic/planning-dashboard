@@ -835,6 +835,15 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
   >
     Staff
   </button>
+<button
+  style={{
+    ...buttonStyle,
+    background: openAFlow ? "#0f766e" : "#334155",
+  }}
+  onClick={() => setOpenAFlow(!openAFlow)}
+>
+  {openAFlow ? "Hide A-FLOW" : "Show A-FLOW"}
+</button>
 
   {/* ✅ SAVE STATUS */}
   <div

@@ -772,7 +772,12 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
     }}>
       {/* LEFT */}
 <div style={{
-  width: window.innerWidth < 768 ? "100%" : "75%",
+  width:
+  window.innerWidth < 768
+    ? "100%"
+    : openAFlow
+    ? "75%"
+    : "100%",
   padding: 8
 }}>
         <h1 style={{ margin: "0 0 6px 0", fontSize: 18 }}>
@@ -990,40 +995,42 @@ coordinators: keepOnlyBHV(savedStaff.coordinators || []),
       {/* RIGHT */}
 <div
   style={{
-    width: openAFlow
-      ? (window.innerWidth < 768 ? "100%" : "25%")
-      : "40px",
+  width: openAFlow
+    ? (window.innerWidth < 768 ? "100%" : "25%")
+    : "0px",
 
-    minHeight: window.innerWidth < 768 ? "auto" : "100vh",
+  minWidth: openAFlow ? "auto" : "0px",
 
-    borderLeft: window.innerWidth < 768 ? "none" : "1px solid #334155",
-    borderTop: window.innerWidth < 768 ? "1px solid #334155" : "none",
+  minHeight: window.innerWidth < 768 ? "auto" : "100vh",
 
-    padding: openAFlow ? 10 : 4,
-    overflow: "hidden",
-    color: "#e2e8f0",
+  borderLeft: window.innerWidth < 768 ? "none" : "1px solid #334155",
+  borderTop: window.innerWidth < 768 ? "1px solid #334155" : "none",
 
-    transition: "all 0.3s ease",
-    position: "relative",
-  }}
+  padding: openAFlow ? 10 : 0,
+  overflow: "hidden",
+
+  transition: "all 0.3s ease",
+  position: "relative",
+}}
 >
  <div
     onClick={() => setOpenAFlow(!openAFlow)}
     style={{
-      position: "absolute",
-      top: 10,
-      left: -18,
-      width: 36,
-      height: 36,
-      background: "#0f766e",
-      borderRadius: "50%",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      cursor: "pointer",
-      fontWeight: "bold",
-      zIndex: 10,
-    }}
+  position: "absolute",
+  top: 10,
+  right: openAFlow ? 10 : -40, // 🔥 key fix
+  width: 36,
+  height: 36,
+  background: "#0f766e",
+  borderRadius: "50%",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer",
+  fontWeight: "bold",
+  zIndex: 20,
+  transition: "all 0.3s ease",
+}}
   >
     {openAFlow ? "➤" : "◀"}
   </div>

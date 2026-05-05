@@ -330,12 +330,10 @@ export default function App() {
    const [openNotIn, setOpenNotIn] = useState(false);
    const [openAFlow, setOpenAFlow] = useState(true);
 
-   const handleUnlock = async () => {
-  if (unlockInput === PASSWORD) {
-    setLocked(false);
-    setShowUnlock(false);
-    setUnlockInput("");
-    await saveShared(boardData, staff, false, team);
+const handleLogin = () => {
+  if (passwordInput === PASSWORD) {
+    localStorage.setItem("auth", "true");
+    setLogged(true);
   } else {
     alert("Wrong password");
   }
